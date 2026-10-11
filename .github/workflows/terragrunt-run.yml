@@ -30,8 +30,6 @@ on:
     secrets:
       SOPS_AGE_KEY:
         required: true
-      BOT_GITHUB_TOKEN:
-        required: false
 
 permissions:
   contents: read
