@@ -1,0 +1,8 @@
+[tools]
+terraform = "1.16.3"
+
+[tasks.fmt-terraform]
+run = "terraform fmt -recursive"
+
+[tasks.fmt-check-terraform]
+run = "terraform fmt -recursive -check"
