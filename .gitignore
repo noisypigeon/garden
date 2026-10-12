@@ -3,3 +3,11 @@
 .terraform.lock.hcl
 .terraform/
 *.tfstate*
+/pigeon.dev/src/public
+/pigeon.dev/src/content/modules/*.md
+!/pigeon.dev/src/content/modules/_index.md
+/pigeon.dev/src/content/theme-versions/*.md
+!/pigeon.dev/src/content/theme-versions/_index.md
+/pigeon.dev/src/content/releases/*.md
+!/pigeon.dev/src/content/releases/_index.md
+/pigeon.dev/src/themes/zola-site

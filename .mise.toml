@@ -1,8 +1,25 @@
 [tools]
 terraform = "1.16.3"
+zola = "0.23.6"
 
 [tasks.fmt-terraform]
 run = "terraform fmt -recursive"
 
 [tasks.fmt-check-terraform]
 run = "terraform fmt -recursive -check"
+
+[tasks.pigeon-dev-build]
+dir = "pigeon.dev/src"
+run = [
+  "../../templates/zola-site/resolve-theme.sh",
+  "../generate-module-redirects.sh",
+  "zola build",
+]
+
+[tasks.pigeon-dev-serve]
+dir = "pigeon.dev/src"
+run = [
+  "../../templates/zola-site/resolve-theme.sh",
+  "../generate-module-redirects.sh",
+  "zola serve",
+]
