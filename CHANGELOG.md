@@ -35,6 +35,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-14
+
+- [pigeon.dev] Flatten the ADR corpus to adr/ and re-prefix it DEV- ([#17](https://github.com/noisypigeon/pigeon.dev/pull/17))
+
 ## 2026-10-13
 
 - [pigeon.dev] Drop the legacy modules/* tag arm from the redirect generator ([#16](https://github.com/noisypigeon/pigeon.dev/pull/16))
