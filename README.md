@@ -43,13 +43,25 @@ version bump. See [`.claude/skills/release-pr/SKILL.md`](.claude/skills/release-
 which is the discipline; `.github/workflows/template-release.yml` is the
 automation that acts on it.
 
+Every merged PR also adds one line to the root
+[`CHANGELOG.md`](CHANGELOG.md) — `template-release.yml` for releases,
+`root-changelog.yml` for everything else. Per-module and theme `CHANGELOG.md`
+files carry the full, versioned entries.
+
 ## Decision records
 
-This repo's ADRs live in `noisypigeon/noisypigeon`, under
-[`docs/adr/`](https://github.com/noisypigeon/noisypigeon/tree/main/docs/adr),
-and continue to be written there — including future decisions about these
-templates. The split itself is
-[ADR-0154](https://github.com/noisypigeon/noisypigeon/blob/main/docs/adr/0154-hoist-templates-to-pigeon-dev-repo.md);
-the directly relevant history is ADR-0037 (the original `pigeon-tf` merge),
-ADR-0093 and ADR-0110 (prior relocations), ADR-0109/0136 (the short-URL
-mechanism), and ADR-0112/0113/0114/0139 (the theme).
+This repo's ADRs live in [`adr/pigeon.dev/`](adr/pigeon.dev), as
+`PD-NNNN-<slug>.md`, and are written there — including future decisions about
+these templates. [`adr/noisypigeon.com/`](adr/noisypigeon.com) is a sibling
+domain holding the blog repo's own decisions, prefixed `NPC-`.
+
+The split itself is
+[ADR-0154](adr/pigeon.dev/PD-0154-hoist-templates-to-pigeon-dev-repo.md); the
+directly relevant history is ADR-0037 (the original `pigeon-tf` merge), ADR-0093
+and ADR-0110 (prior relocations), ADR-0109/0136 (the short-URL mechanism), and
+ADR-0112/0113/0114/0139 (the theme). The corpus itself moved here in
+[ADR-0157](adr/pigeon.dev/PD-0157-hoist-adrs-to-pigeon-dev.md) and took its
+current name and `PD-` prefix in
+[PD-0160](adr/pigeon.dev/PD-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md),
+which also set the root-changelog contract below. Bare `ADR-NNNN` in older prose
+and `PD-NNNN` refer to the same records.
