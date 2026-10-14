@@ -1,6 +1,6 @@
 # NPC-0000: bootstrap the `noisypigeon.com` repo and open an `NPC-`-prefixed ADR domain
 
-- **Author**: Willow Finch/Graysen ([@noisypigeon](https://github.com/noisypigeon)).
+- **Author**: Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).
 - **Date**: 2026-10-13.
 - **Status**: Accepted.
 
