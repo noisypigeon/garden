@@ -3,6 +3,8 @@
 .terraform.lock.hcl
 .terraform/
 *.tfstate*
+# Materialized by fetch-lib.sh
+/.lib-src/
 /pigeon.dev/src/public
 /pigeon.dev/src/content/modules/*.md
 !/pigeon.dev/src/content/modules/_index.md
