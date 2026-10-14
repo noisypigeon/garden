@@ -49,8 +49,16 @@ declined to deduplicate. Only the prefix and the directory change.
 
 All 231 `PD-` occurrences in this repo become `DEV-` — citations, the bare prefix
 token, the `PD-NNNN` placeholder in prose, the `PD-[0-9]{4}` regexes in verification
-text, and the 33 relative sibling link targets. The 48 in `pigeon-lib` and the two in
+text, and the 33 relative sibling link targets. The 133 in `pigeon-lib` and the three in
 `noisypigeon` and `noisypigeon.com` are rewritten in their own PRs.
+
+Those 133 include 20 inside five published module changelog entries, which needs
+justifying rather than assuming: NPC-0000's precedent is that published changelog
+copy is not retrofitted to a later layout. It does not bite here, because those
+versions have **no corresponding GitHub Release in `pigeon-lib`** — the historical
+Releases live in `noisypigeon` under the old tag names — so there is nothing to
+diverge from, and the site's release posts are generated from these files, so
+rewriting keeps them consistent rather than splitting them.
 
 The 1,127 bare `ADR-NNNN` citations are **not** touched, and that asymmetry is the
 point. PD-0160 grandfathered them on volume: rewriting would churn ~45 published
