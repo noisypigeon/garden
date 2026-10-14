@@ -2,7 +2,7 @@
 
 One line per PR across this whole repo, sectioned by date, newest first. Every
 merged PR gets exactly one line here; a PR that changes a releasable unit
-additionally gets its full PR body in that unit's own `CHANGELOG.md`. PD-0160 is
+additionally gets its full PR body in that unit's own `CHANGELOG.md`. DEV-0160 is
 the contract.
 
 Not versioned — for versioned, package-scoped changelogs see
@@ -27,7 +27,7 @@ stands down when `template-release.yml` owns the entry. Both go through
 of this header — keep that line where it is.
 
 This file starts at this repo's own beginning. Entries predating
-[ADR-0154](adr/pigeon.dev/PD-0154-hoist-templates-to-pigeon-dev-repo.md), which
+[ADR-0154](adr/pigeon.dev/DEV-0154-hoist-templates-to-pigeon-dev-repo.md), which
 moved `templates/` here out of `noisypigeon/noisypigeon`, stayed in that repo's
 root `CHANGELOG.md` rather than being untangled from it — the same call ADR-0084
 made when `pigeon-cli` split out. Each module's own `CHANGELOG.md` travelled
@@ -41,4 +41,4 @@ with the module, so no per-module history was lost.
 - [templates] Correct the seed-tag entries' GitHub Release claim ([#15](https://github.com/noisypigeon/pigeon.dev/pull/15))
 - [templates] Backfill changelog entries for six undocumented module tags ([#14](https://github.com/noisypigeon/pigeon.dev/pull/14))
 - [adr] Open the adr/pigeon-lib ADR domain and record the hub-and-spoke repo architecture ([#13](https://github.com/noisypigeon/pigeon.dev/pull/13))
-- [adr] Rename the ADR domain to adr/pigeon.dev with PD- IDs, and make the root changelog a contract ([#12](https://github.com/noisypigeon/pigeon.dev/pull/12))
+- [adr] Rename the ADR domain to adr/pigeon.dev with DEV- IDs, and make the root changelog a contract ([#12](https://github.com/noisypigeon/pigeon.dev/pull/12))

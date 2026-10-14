@@ -51,17 +51,17 @@ files carry the full, versioned entries.
 ## Decision records
 
 This repo's ADRs live in [`adr/pigeon.dev/`](adr/pigeon.dev), as
-`PD-NNNN-<slug>.md`, and are written there — including future decisions about
+`DEV-NNNN-<slug>.md`, and are written there — including future decisions about
 these templates. [`adr/noisypigeon.com/`](adr/noisypigeon.com) is a sibling
 domain holding the blog repo's own decisions, prefixed `NPC-`.
 
 The split itself is
-[ADR-0154](adr/pigeon.dev/PD-0154-hoist-templates-to-pigeon-dev-repo.md); the
+[ADR-0154](adr/pigeon.dev/DEV-0154-hoist-templates-to-pigeon-dev-repo.md); the
 directly relevant history is ADR-0037 (the original `pigeon-tf` merge), ADR-0093
 and ADR-0110 (prior relocations), ADR-0109/0136 (the short-URL mechanism), and
 ADR-0112/0113/0114/0139 (the theme). The corpus itself moved here in
-[ADR-0157](adr/pigeon.dev/PD-0157-hoist-adrs-to-pigeon-dev.md) and took its
-current name and `PD-` prefix in
-[PD-0160](adr/pigeon.dev/PD-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md),
+[ADR-0157](adr/pigeon.dev/DEV-0157-hoist-adrs-to-pigeon-dev.md) and took its
+current name and `DEV-` prefix in
+[DEV-0160](adr/pigeon.dev/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md),
 which also set the root-changelog contract below. Bare `ADR-NNNN` in older prose
-and `PD-NNNN` refer to the same records.
+and `DEV-NNNN` refer to the same records.

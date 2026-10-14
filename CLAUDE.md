@@ -36,9 +36,9 @@ for the module index.
 ## Where the decisions live
 
 ADRs live in this repo, under `adr/`, one directory per decision domain. The
-`pigeon.dev` domain is `adr/pigeon.dev/PD-NNNN-<slug>.md` — hoisted here from
+`pigeon.dev` domain is `adr/pigeon.dev/DEV-NNNN-<slug>.md` — hoisted here from
 `noisypigeon/noisypigeon/docs/adr/` by ADR-0157 and renamed from
-`adr/infrastructure/` with `PD-` IDs by PD-0160. Its sibling is
+`adr/infrastructure/` with `DEV-` IDs by DEV-0160. Its sibling is
 `adr/noisypigeon.com/NPC-NNNN-<slug>.md` (NPC-0000), the blog repo's own
 decisions. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
@@ -47,27 +47,27 @@ ADR over undocumented drift.
 
 Filing a `pigeon.dev` ADR, by hand — `adr-new.sh` lives in
 `noisypigeon/noisypigeon` and still hardcodes the old path, so it cannot create
-these (PD-0160):
+these (DEV-0160):
 
 - **Number**: max+1 **within `adr/pigeon.dev/`**, which is the only sequence it
   shares. `0136`, `0138` and `0156` are each used twice already, from parallel
   branches — check before claiming a number.
-- **Filename and H1 agree**: `PD-0160-<slug>.md` holds `# PD-0160: <title>`.
+- **Filename and H1 agree**: `DEV-0160-<slug>.md` holds `# DEV-0160: <title>`.
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
   Records dated before 2026-10-03 say `Willow Finch` and are correct as filed;
   do not retrofit them.
 - **Sections**: `## Context` / `## Decision` / `## Consequences` /
   `## Out of scope`, optionally then `## Verification`. No YAML frontmatter, and
   no index or registry to update — there isn't one.
-- **Citations**: cite `PD-NNNN`. Bare `ADR-NNNN` in existing prose means the
-  same record — PD-0160 renamed the files and H1s but grandfathered the ~1,100
+- **Citations**: cite `DEV-NNNN`. Bare `ADR-NNNN` in existing prose means the
+  same record — DEV-0160 renamed the files and H1s but grandfathered the ~1,100
   in-text citations, so the two spellings are aliases for this corpus.
 - Genuinely-deferred `## Out of scope` items get a GitHub issue filed against
   `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
 
 The load-bearing ones for this repo: ADR-0154 (the split that brought
 `templates/` here; its prefix→repo mapping, which kept 20 legacy `modules/*`-era
-tags resolving against `noisypigeon/noisypigeon`, was retired by PD-0160 step 0
+tags resolving against `noisypigeon/noisypigeon`, was retired by DEV-0160 step 0
 once nothing pinned them — every module tag now lives here, under one prefix),
 ADR-0037/0093/0110 (this directory's prior homes and why old tags still
 resolve), ADR-0109/0136 (the short-URL redirect
@@ -87,7 +87,7 @@ branch protection.
 Every merged PR gets exactly one line in the root `CHANGELOG.md`, under a
 `## YYYY-MM-DD` section, newest first; a PR that changes a releasable unit
 additionally gets its full PR body in that unit's own `CHANGELOG.md`. That is
-PD-0160's contract, and `.github/scripts/root-changelog.sh` is the single
+DEV-0160's contract, and `.github/scripts/root-changelog.sh` is the single
 implementation both writers call. `template-release.yml` writes the line for
 module and theme releases; `root-changelog.yml` runs on every merged PR and
 covers everything else (`pigeon.dev/`, `templates/` without a release, `adr/`,

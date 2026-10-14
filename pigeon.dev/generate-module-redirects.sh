@@ -5,12 +5,12 @@
 # `terraform init` can resolve a short pigeon.dev module source URL to the
 # tagged git:: source. The public URL always uses "modules/..." regardless of
 # the prefix the tag actually lives under, so the public namespace stays
-# stable even as the repo's internal layout moves (PD-0109, PD-0110).
+# stable even as the repo's internal layout moves (DEV-0109, DEV-0110).
 #
 # Every module tag lives in this repo, under the templates/terraform prefix.
-# PD-0154 split them across two repos for a while, with the older modules/*
+# DEV-0154 split them across two repos for a while, with the older modules/*
 # era resolving against noisypigeon/noisypigeon from a committed tag list;
-# PD-0160 step 0 retired that arm once nothing pinned it any more, so the
+# DEV-0160 step 0 retired that arm once nothing pinned it any more, so the
 # prefix -> repo mapping is now a single constant.
 #
 # Also generates one page per templates/zola-site/vX.Y.Z tag (ADR-0114) — a
@@ -41,7 +41,7 @@ if [ ! -d "$REPO_ROOT/templates/terraform" ]; then
   exit 1
 fi
 
-# Every module tag lives in this repo now (PD-0160 step 0), so there is one
+# Every module tag lives in this repo now (DEV-0160 step 0), so there is one
 # repo to name and one place to read tags from.
 TAG_REPO="noisypigeon/pigeon.dev"
 
@@ -72,7 +72,7 @@ while IFS= read -r tag; do
   full_tag="${prefix}/${provider}/${module}/v${version}"
   repo="$TAG_REPO"
   # The public URL stays "modules/..." forever, independent of the prefix the
-  # tag actually lives under (PD-0110) — this is the whole point.
+  # tag actually lives under (DEV-0110) — this is the whole point.
   url_path="modules/${provider}/${module}/v${version}"
   git_source="git::https://github.com/${repo}.git//${prefix}/${provider}/${module}?ref=${full_tag}"
   github_url="https://github.com/${repo}/releases/tag/${full_tag}"
