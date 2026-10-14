@@ -34,3 +34,7 @@ made when `pigeon-cli` split out. Each module's own `CHANGELOG.md` travelled
 with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
+
+## 2026-10-13
+
+- [adr] Rename the ADR domain to adr/pigeon.dev with PD- IDs, and make the root changelog a contract ([#12](https://github.com/noisypigeon/pigeon.dev/pull/12))
