@@ -1,7 +1,13 @@
-# Deploys pigeon.dev/src to GitHub Pages. Same-repo call into
-# zola-site-pages.yml (not noisypigeon/pigeon.dev/...@main) -- deploy-pages
-# always targets the calling repo's own Pages site, so this caller has to
-# live here, where that Pages site actually is (ADR-0156).
+# Deploys pigeon.dev/src to GitHub Pages. Cross-repo call into
+# noisypigeon/pigeon-lib's zola-site-pages.yml -- deploy-pages always targets
+# the calling repo's own Pages site, so this caller has to live here, where that
+# Pages site actually is (ADR-0156). It is the one caller LIB-0002 could not move.
+#
+# Pinned to a version rather than @main (LIB-0001 invariant 2). fetch_script
+# materializes pigeon-lib at the version /.lib-version pins; theme_script and
+# extra_step then run that clone's copies of resolve-theme.sh and the module
+# redirect generator, both of which resolve their own root from their own
+# location rather than this repo's.
 name: Deploy pigeon.dev
 
 on:
@@ -23,8 +29,10 @@ concurrency:
 
 jobs:
   deploy:
-    uses: ./.github/workflows/zola-site-pages.yml
+    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.0.3
     with:
       src_dir: pigeon.dev/src
       build_cmd: "zola build"
-      extra_step: "pigeon.dev/generate-module-redirects.sh"
+      fetch_script: fetch-lib.sh
+      theme_script: .lib-src/zola-site/resolve-theme.sh
+      extra_step: ".lib-src/.github/scripts/generate-module-redirects.sh --content-root pigeon.dev/src/content"

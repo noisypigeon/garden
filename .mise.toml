@@ -1,25 +1,27 @@
 [tools]
-terraform = "1.16.3"
 zola = "0.23.6"
 
-[tasks.fmt-terraform]
-run = "terraform fmt -recursive"
+# No terraform: the modules moved to noisypigeon/pigeon-lib (LIB-0002), and so
+# did the fmt tasks that checked them. This repo is content.
 
-[tasks.fmt-check-terraform]
-run = "terraform fmt -recursive -check"
-
+# resolve-theme.sh and the redirect generator both resolve their own root from
+# their own location rather than this repo's, so running the copies under
+# .lib-src/ from this site's src/ is correct -- that is the property DEV-0154
+# gave resolve-theme.sh and LIB-0002 gave the generator.
 [tasks.pigeon-dev-build]
 dir = "pigeon.dev/src"
 run = [
-  "../../templates/zola-site/resolve-theme.sh",
-  "../generate-module-redirects.sh",
+  "../../fetch-lib.sh",
+  "../../.lib-src/zola-site/resolve-theme.sh",
+  "../../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
   "zola build",
 ]
 
 [tasks.pigeon-dev-serve]
 dir = "pigeon.dev/src"
 run = [
-  "../../templates/zola-site/resolve-theme.sh",
-  "../generate-module-redirects.sh",
+  "../../fetch-lib.sh",
+  "../../.lib-src/zola-site/resolve-theme.sh",
+  "../../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
   "zola serve",
 ]
