@@ -37,5 +37,6 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-13
 
+- [templates] Backfill changelog entries for six undocumented module tags ([#14](https://github.com/noisypigeon/pigeon.dev/pull/14))
 - [adr] Open the adr/pigeon-lib ADR domain and record the hub-and-spoke repo architecture ([#13](https://github.com/noisypigeon/pigeon.dev/pull/13))
 - [adr] Rename the ADR domain to adr/pigeon.dev with PD- IDs, and make the root changelog a contract ([#12](https://github.com/noisypigeon/pigeon.dev/pull/12))
