@@ -23,7 +23,7 @@ still gets one via its own `fetch-templates.sh`).
   through go-getter's HTTP discovery protocol to a `git::` source against this
   repo. The public URL path is `modules/…`, **not** `templates/terraform/…` —
   that namespace is a stable public interface, deliberately decoupled from
-  internal layout (ADR-0109/0110) and now from which repo the tag lives in.
+  internal layout (ADR-0109/0110).
 - `templates/zola-site/` — a reusable Zola theme, tagged
   `templates/zola-site/vX.Y.Z`, consumed by a site setting
   `[extra].theme_version` and running `resolve-theme.sh` out of a clone of this
@@ -65,12 +65,12 @@ these (PD-0160):
 - Genuinely-deferred `## Out of scope` items get a GitHub issue filed against
   `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
 
-The load-bearing ones for this repo: ADR-0154 (the split, and the prefix→repo
-mapping that keeps 20 legacy `modules/*`-era tags resolving against
-`noisypigeon/noisypigeon` — one of them is still live-pinned, listed in
-`pigeon.dev/legacy-module-tags.txt` since this repo has no other way to know
-about tags that live in that one), ADR-0037/0093/0110 (this directory's prior
-homes and why old tags still resolve), ADR-0109/0136 (the short-URL redirect
+The load-bearing ones for this repo: ADR-0154 (the split that brought
+`templates/` here; its prefix→repo mapping, which kept 20 legacy `modules/*`-era
+tags resolving against `noisypigeon/noisypigeon`, was retired by PD-0160 step 0
+once nothing pinned them — every module tag now lives here, under one prefix),
+ADR-0037/0093/0110 (this directory's prior homes and why old tags still
+resolve), ADR-0109/0136 (the short-URL redirect
 mechanism and its move to the `pigeon.dev` host), ADR-0119/0120/0153 (the
 modules' current composition shape), ADR-0112/0113/0114/0139 (the theme, its
 versioning, and its resolution), and ADR-0156 (hoisting `pigeon.dev/src` here

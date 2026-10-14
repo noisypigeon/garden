@@ -26,7 +26,7 @@ module "state_bucket" {
 
 Note the public namespace is `modules/...`, not `templates/terraform/...` —
 it is a stable public interface, deliberately decoupled from this repo's
-internal layout and from which repo the tag lives in. See
+internal layout. See
 [`templates/terraform/README.md`](templates/terraform/README.md) for the full
 contract, including the equivalent hand-written `git::` form and how to
 iterate locally against an unreleased change.

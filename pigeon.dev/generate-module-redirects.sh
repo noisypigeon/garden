@@ -1,27 +1,17 @@
 #!/usr/bin/env bash
-# Generates one Zola content page per <prefix>/<provider>/<module>/vX.Y.Z git
-# tag, where <prefix> is one of the known live tag prefixes (currently
-# "modules" and "templates/terraform" — see ADR-0110). Each page is a static
+# Generates one Zola content page per
+# templates/terraform/<provider>/<module>/vX.Y.Z git tag. Each page is a static
 # "redirect" page carrying a <meta name="terraform-get"> tag so
 # `terraform init` can resolve a short pigeon.dev module source URL to the
 # tagged git:: source. The public URL always uses "modules/..." regardless of
-# which prefix the tag actually lives under, so the public namespace stays
-# stable even as the repo's internal layout moves.
-# See docs/adr/0109, docs/adr/0110 (both in noisypigeon/noisypigeon).
+# the prefix the tag actually lives under, so the public namespace stays
+# stable even as the repo's internal layout moves (PD-0109, PD-0110).
 #
-# A tag's prefix decides which repo its git:: source names:
-#
-#   modules/...             -> noisypigeon/noisypigeon  (frozen; 20 tags that
-#                              predate templates/ existing in that repo, so
-#                              ADR-0154's filter-repo could not carry them
-#                              here, and one of them is still live-pinned).
-#                              Listed in legacy-module-tags.txt, committed
-#                              next to this script, since this repo has no
-#                              other way to know about tags that live in a
-#                              different one.
-#   templates/terraform/... -> noisypigeon/pigeon.dev   (this repo, where
-#                              templates/ lives since ADR-0154, and where
-#                              every future tag is cut)
+# Every module tag lives in this repo, under the templates/terraform prefix.
+# PD-0154 split them across two repos for a while, with the older modules/*
+# era resolving against noisypigeon/noisypigeon from a committed tag list;
+# PD-0160 step 0 retired that arm once nothing pinned it any more, so the
+# prefix -> repo mapping is now a single constant.
 #
 # Also generates one page per templates/zola-site/vX.Y.Z tag (ADR-0114) — a
 # separate loop since the tag shape doesn't fit the provider/module pattern
@@ -42,7 +32,6 @@
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-LEGACY_TAGS_FILE="$REPO_ROOT/pigeon.dev/legacy-module-tags.txt"
 CONTENT_DIR="$REPO_ROOT/pigeon.dev/src/content/modules"
 THEME_CONTENT_DIR="$REPO_ROOT/pigeon.dev/src/content/theme-versions"
 RELEASES_CONTENT_DIR="$REPO_ROOT/pigeon.dev/src/content/releases"
@@ -52,30 +41,10 @@ if [ ! -d "$REPO_ROOT/templates/terraform" ]; then
   exit 1
 fi
 
-# A tag prefix names the repo that tag lives in (ADR-0154).
-repo_for_prefix() {
-  case "$1" in
-    modules) echo "noisypigeon/noisypigeon" ;;
-    templates/terraform) echo "noisypigeon/pigeon.dev" ;;
-    *)
-      echo "::error::No repo mapping for tag prefix: $1" >&2
-      exit 1
-      ;;
-  esac
-}
+# Every module tag lives in this repo now (PD-0160 step 0), so there is one
+# repo to name and one place to read tags from.
+TAG_REPO="noisypigeon/pigeon.dev"
 
-# legacy_tags filters the frozen, committed list instead of asking git --
-# these tags live in a different repo (noisypigeon/noisypigeon), not this
-# one. templates_tags asks git directly: those tags are local now (ADR-0156).
-legacy_tags() {
-  local pattern="$1"
-  # Translate the caller's glob (e.g. "modules/*/*/v*" or
-  # "modules/scaleway/object-bucket/v*") into a grep -E anchor over the flat
-  # committed list -- same call sites as before, same semantics.
-  local regex
-  regex="^$(printf '%s' "$pattern" | sed -E 's/\*/[^\/]*/g')$"
-  grep -E "$regex" "$LEGACY_TAGS_FILE" || true
-}
 templates_tags() { git -C "$REPO_ROOT" tag --list "$@"; }
 
 mkdir -p "$CONTENT_DIR"
@@ -89,7 +58,7 @@ while IFS= read -r tag; do
 
   # Explicit allowlist, not a generic catch-all: legacy terraform/modules/...
   # tags stay unredirected (ADR-0109's permanent boundary).
-  if [[ ! "$tag" =~ ^(modules|templates/terraform)/([a-z0-9-]+)/([a-z0-9-]+)/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+  if [[ ! "$tag" =~ ^(templates/terraform)/([a-z0-9-]+)/([a-z0-9-]+)/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
     echo "::warning::Skipping tag with unexpected shape: $tag" >&2
     continue
   fi
@@ -101,10 +70,9 @@ while IFS= read -r tag; do
 
   slug="${provider}-${module}-v${version}"
   full_tag="${prefix}/${provider}/${module}/v${version}"
-  repo="$(repo_for_prefix "$prefix")"
-  # The public URL stays "modules/..." forever, independent of which prefix
-  # the tag actually lives under, or which repo (see ADR-0110, ADR-0154) —
-  # this is the whole point.
+  repo="$TAG_REPO"
+  # The public URL stays "modules/..." forever, independent of the prefix the
+  # tag actually lives under (PD-0110) — this is the whole point.
   url_path="modules/${provider}/${module}/v${version}"
   git_source="git::https://github.com/${repo}.git//${prefix}/${provider}/${module}?ref=${full_tag}"
   github_url="https://github.com/${repo}/releases/tag/${full_tag}"
@@ -126,7 +94,7 @@ github_url = "${github_url}"
 EOF
 
   count=$((count + 1))
-done < <({ legacy_tags 'modules/*/*/v*'; templates_tags 'templates/terraform/*/*/v*'; } | sort)
+done < <(templates_tags 'templates/terraform/*/*/v*' | sort)
 
 echo "Generated ${count} module redirect page(s) under ${CONTENT_DIR#"$REPO_ROOT"/}."
 
@@ -142,9 +110,9 @@ toml_escape() {
   printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
 }
 
-module_pairs="$({ legacy_tags 'modules/*/*/v*'; templates_tags 'templates/terraform/*/*/v*'; } \
-  | grep -E '^(modules|templates/terraform)/[a-z0-9-]+/[a-z0-9-]+/v[0-9]+\.[0-9]+\.[0-9]+$' \
-  | sed -E 's#^(modules|templates/terraform)/([a-z0-9-]+)/([a-z0-9-]+)/v.*#\2/\3#' \
+module_pairs="$(templates_tags 'templates/terraform/*/*/v*' \
+  | grep -E '^templates/terraform/[a-z0-9-]+/[a-z0-9-]+/v[0-9]+\.[0-9]+\.[0-9]+$' \
+  | sed -E 's#^templates/terraform/([a-z0-9-]+)/([a-z0-9-]+)/v.*#\1/\2#' \
   | sort -u)"
 
 overview_count=0
@@ -153,7 +121,7 @@ while IFS= read -r pair; do
   provider="${pair%%/*}"
   module="${pair##*/}"
 
-  versions="$({ legacy_tags "modules/${provider}/${module}/v*"; templates_tags "templates/terraform/${provider}/${module}/v*"; } \
+  versions="$(templates_tags "templates/terraform/${provider}/${module}/v*" \
     | sed -E 's#.*/v([0-9]+\.[0-9]+\.[0-9]+)$#\1#' \
     | sort -t. -k1,1n -k2,2n -k3,3n -u)"
   latest_version="$(echo "$versions" | tail -1)"
@@ -179,7 +147,7 @@ while IFS= read -r pair; do
   fi
 
   slug="${provider}-${module}"
-  github_url="https://github.com/noisypigeon/pigeon.dev/tree/main/templates/terraform/${provider}/${module}"
+  github_url="https://github.com/${TAG_REPO}/tree/main/templates/terraform/${provider}/${module}"
 
   {
     echo "+++"
@@ -233,7 +201,7 @@ while IFS= read -r tag; do
 
   slug="${theme}-v${version}"
   url_path="templates/${theme}/v${version}"
-  github_url="https://github.com/noisypigeon/pigeon.dev/releases/tag/${tag}"
+  github_url="https://github.com/${TAG_REPO}/releases/tag/${tag}"
 
   cat > "$THEME_CONTENT_DIR/${slug}.md" <<EOF
 +++
