@@ -37,6 +37,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-14
 
+- [pigeon.dev] Consume pigeon-lib at a pinned version ([#18](https://github.com/noisypigeon/pigeon.dev/pull/18))
 - [pigeon.dev] Flatten the ADR corpus to adr/ and re-prefix it DEV- ([#17](https://github.com/noisypigeon/pigeon.dev/pull/17))
 
 ## 2026-10-13
