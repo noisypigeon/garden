@@ -201,20 +201,20 @@ prose.
   it would let `site_dir` and `src_dir` collapse to `.`. Out of scope here because it touches
   both workflow callers, `fetch-templates.sh`, and every path in the two new docs, and because
   `site_dir: "."` would make the full entry and the rollup line target the same file — i.e. it
-  needs decision 2 landed first regardless.
+  needs decision 2 landed first regardless. ([#292](https://github.com/noisypigeon/noisypigeon/issues/292))
 - **Teaching `adr-new.sh` about domains and prefixes.** Genuinely deferred — tracked. A
   `--domain`/`--prefix` flag computing max+1 within the chosen directory would remove the
   hand-numbering risk named in `## Consequences`. The script lives in `noisypigeon/noisypigeon`,
-  a third repo, so it is not in either PR here.
+  a third repo, so it is not in either PR here. ([#293](https://github.com/noisypigeon/noisypigeon/issues/293))
 - **`pigeon.dev`'s own `README.md` and `CLAUDE.md` still say ADRs live in the monorepo.**
   Genuinely deferred — tracked. `README.md` claims *"This repo's ADRs live in
   `noisypigeon/noisypigeon`, under `docs/adr/`"* and `CLAUDE.md` asserts *"This repo has no
   `docs/adr/`"*; both were falsified by ADR-0157 and are more wrong now that `adr/` has two
   children. Documented rather than fixed here to keep this PR's diff to the decision it records —
-  the same call ADR-0159 made about a wrong citation it found.
+  the same call ADR-0159 made about a wrong citation it found. ([#294](https://github.com/noisypigeon/noisypigeon/issues/294))
 - **Branch protection and required status checks on either repo.** Genuinely deferred — already
   raised in ADR-0157 and ADR-0159; neither repo has rulesets or protection, and this ADR adds a
-  cross-repo merge-ordering constraint that nothing enforces.
+  cross-repo merge-ordering constraint that nothing enforces. ([#295](https://github.com/noisypigeon/noisypigeon/issues/295))
 - **`.editorconfig`, a PR template, or a `LICENSE` for the blog repo.** Permanent boundary for
   now: no repo in this family has an `.editorconfig`, and the PR body's role as published
   changelog copy is documented in `CLAUDE.md` rather than enforced by a template.
