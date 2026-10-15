@@ -1,4 +1,4 @@
-# Deploys pigeon.dev/src to GitHub Pages. Cross-repo call into
+# Deploys web/ to GitHub Pages. Cross-repo call into
 # noisypigeon/pigeon-lib's zola-site-pages.yml -- deploy-pages always targets
 # the calling repo's own Pages site, so this caller has to live here, where that
 # Pages site actually is (ADR-0156). It is the one caller LIB-0002 could not move.
@@ -14,8 +14,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "pigeon.dev/**"
-      - "templates/**"
+      - "web/**"
   workflow_dispatch: {}
 
 permissions:
@@ -29,10 +28,10 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.0.4
+    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.0.5
     with:
-      src_dir: pigeon.dev/src
+      src_dir: web
       build_cmd: "zola build"
       fetch_script: fetch-lib.sh
       theme_script: .lib-src/zola-site/resolve-theme.sh
-      extra_step: ".lib-src/.github/scripts/generate-module-redirects.sh --content-root pigeon.dev/src/content"
+      extra_step: ".lib-src/.github/scripts/generate-module-redirects.sh --content-root web/content"

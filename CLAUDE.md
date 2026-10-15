@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This repo is `pigeon.dev`: the Zola site under `pigeon.dev/src`, and the
+This repo is `pigeon.dev`: the Zola site under `web/`, and the
 short-URL host that resolves Terraform module sources. It is a **spoke** in the
 hub-and-spoke architecture of LIB-0001 — content plus its own deploy, consuming
 every reusable asset from the hub by pinned version.
@@ -17,7 +17,7 @@ What stayed, and why: `pigeon.dev/modules/<provider>/<module>/vX.Y.Z` is a
 public interface with a stability guarantee (ADR-0109/0110), and serving it is a
 property of the domain rather than of the code. The redirect pages, module
 overview pages and release posts that implement it are generated into
-`pigeon.dev/src/content` at build time by the hub's
+`web/content` at build time by the hub's
 `.github/scripts/generate-module-redirects.sh`, reading the **hub's** tags and
 `CHANGELOG.md` files out of the fetched `.lib-src/`. The public URL path is
 `modules/…` and always was — decoupling it from internal layout is exactly what
@@ -25,11 +25,14 @@ let the source move out from under it without breaking a pin.
 
 The history is worth knowing when reading older records: ADR-0154 hoisted
 `templates/` here from `noisypigeon/noisypigeon` keeping the `templates/…` paths
-byte-identical, and ADR-0156 then hoisted `pigeon.dev/src` in alongside it,
+byte-identical, and ADR-0156 then hoisted the site in as `pigeon.dev/src`
+alongside it,
 which let the generator read `templates/` off local disk and let
 `resolve-theme.sh` use a live `"main"` symlink. DEV-0162 undid both of those
 localisations: everything is fetched again now, but pinned to a version rather
-than tracking a branch.
+than tracking a branch, and renamed the site root from `pigeon.dev/src` to
+`web/` -- a repo named `pigeon.dev` does not need a directory named
+`pigeon.dev` inside it.
 
 See `README.md` for the consumption contract.
 
@@ -116,7 +119,7 @@ iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
 ## Commands
 
 - `mise run pigeon-dev-build` / `mise run pigeon-dev-serve` — build / serve
-  `pigeon.dev/src` with Zola. Each fetches the pinned library, resolves the
+  `web/` with Zola. Each fetches the pinned library, resolves the
   theme out of it, regenerates the redirect/overview/release pages, then runs
   `zola build`/`zola serve`.
 

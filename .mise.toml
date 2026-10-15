@@ -9,19 +9,19 @@ zola = "0.23.6"
 # .lib-src/ from this site's src/ is correct -- that is the property DEV-0154
 # gave resolve-theme.sh and LIB-0002 gave the generator.
 [tasks.pigeon-dev-build]
-dir = "pigeon.dev/src"
+dir = "web"
 run = [
-  "../../fetch-lib.sh",
-  "../../.lib-src/zola-site/resolve-theme.sh",
-  "../../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
+  "../fetch-lib.sh",
+  "../.lib-src/zola-site/resolve-theme.sh",
+  "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
   "zola build",
 ]
 
 [tasks.pigeon-dev-serve]
-dir = "pigeon.dev/src"
+dir = "web"
 run = [
-  "../../fetch-lib.sh",
-  "../../.lib-src/zola-site/resolve-theme.sh",
-  "../../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
+  "../fetch-lib.sh",
+  "../.lib-src/zola-site/resolve-theme.sh",
+  "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
   "zola serve",
 ]
