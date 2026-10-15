@@ -11,7 +11,7 @@ Terraform modules and the Zola theme they describe.
 
 Entry format is `- [<tag>] <PR title> ([#N](pr-url))`, where `<tag>` is one of:
 
-- `pigeon.dev` — the Zola site under `pigeon.dev/`
+- `pigeon.dev` — the Zola site under `web/` (`pigeon.dev/src/` before DEV-0162)
 - `adr` — decision records under `adr/`
 - `ci` — `.github/` workflows and scripts
 - `repo` — anything else (root docs, `.mise.toml`, tooling)

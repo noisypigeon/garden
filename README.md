@@ -57,7 +57,7 @@ workflow as the only writer of it.
 
 This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`, and are
 written there. Each repo now keeps its own corpus under its own prefix —
-`noisypigeon.com` holds `NPC-` records, `pigeon-lib` holds `LIB-` ones — so this
+`noisypigeon.com` holds `COM-` records (formerly `NPC-`), `pigeon-lib` holds `LIB-` ones — so this
 directory is `DEV-` only, and flat.
 
 The split itself is
