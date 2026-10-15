@@ -46,8 +46,6 @@ jobs:
           # precedence wins, even for a PR spanning several areas.
           if echo "$CHANGED_FILES" | grep -q '^pigeon\.dev/'; then
             TAG="pigeon.dev"
-          elif echo "$CHANGED_FILES" | grep -q '^templates/'; then
-            TAG="templates"
           elif echo "$CHANGED_FILES" | grep -q '^adr/'; then
             TAG="adr"
           elif echo "$CHANGED_FILES" | grep -q '^\.github/'; then

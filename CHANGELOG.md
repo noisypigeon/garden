@@ -12,7 +12,6 @@ Terraform modules and the Zola theme they describe.
 Entry format is `- [<tag>] <PR title> ([#N](pr-url))`, where `<tag>` is one of:
 
 - `pigeon.dev` — the Zola site under `pigeon.dev/`
-- `templates` — a `templates/` change that releases nothing (e.g. a README)
 - `adr` — decision records under `adr/`
 - `ci` — `.github/` workflows and scripts
 - `repo` — anything else (root docs, `.mise.toml`, tooling)
@@ -22,10 +21,12 @@ with no exceptions. It calls `root-changelog.sh` out of the pinned library
 rather than a vendored copy, and that script inserts below the marker at the end
 of this header — keep that line where it is.
 
-Entries tagged with a `<provider>/<module>` or `zola-site` would have been
-written by `template-release.yml` as part of cutting a release. None ever were:
-this repo's releases all predate DEV-0160's contract, and DEV-0162 moved the
-releasing itself to `pigeon-lib` before the case arose.
+Two older tags appear in entries below but are no longer issued. `templates`
+marked a `templates/` change that released nothing; DEV-0162 moved that
+directory to `pigeon-lib`. A `<provider>/<module>` or `zola-site` tag would have
+marked a release, written by `template-release.yml` — none ever were, since this
+repo's releases all predate DEV-0160's contract and DEV-0162 moved the releasing
+itself to `pigeon-lib` before the case arose.
 
 This file starts at this repo's own beginning. Entries predating
 [ADR-0154](adr/DEV-0154-hoist-templates-to-pigeon-dev-repo.md), which

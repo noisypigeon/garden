@@ -1,22 +1,24 @@
 # pigeon.dev
 
-Versioned, reusable templates, published at `pigeon.dev` and consumed by
-[`noisypigeon/noisypigeon`](https://github.com/noisypigeon/noisypigeon)'s
-`workloads/` (and any future infra repo). Two independently versioned tracks:
+The Zola site published at `pigeon.dev`, and the short-URL host that resolves
+Terraform module sources to the repo holding them.
 
-| Track | What it is | Tags |
-| --- | --- | --- |
-| [`templates/terraform/`](templates/terraform/) | 13 Terraform modules (Scaleway, Backblaze). See its [README](templates/terraform/README.md) for the module index. | `templates/terraform/<provider>/<module>/vX.Y.Z` |
-| [`templates/zola-site/`](templates/zola-site/) | A reusable Zola theme. See its [README](templates/zola-site/README.md). | `templates/zola-site/vX.Y.Z` |
+**The templates themselves are no longer here.** DEV-0162 moved
+`templates/terraform/` and `templates/zola-site/` to
+[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib), where
+they live as `terraform/` and `zola-site/` and are tagged and released. This
+repo kept the one thing that must stay: `pigeon.dev/modules/...` is a public
+interface with a stability guarantee, and serving it is a property of the
+domain, not of the code.
 
-This repo holds template source only. It has no root provider/backend
-configuration and is never `terraform`/`terragrunt` run standalone, and it
-runs no infrastructure of its own.
+So this repo is content and its own deploy. It holds no templates, no scripts
+beyond [`fetch-lib.sh`](fetch-lib.sh), no provider or backend configuration,
+and runs no infrastructure of its own.
 
 ## Consuming
 
-A Terraform module is consumed by its short URL, which resolves through
-Terraform/go-getter's HTTP module-source discovery protocol:
+A Terraform module is consumed by its short URL, unchanged by the move, which
+resolves through Terraform/go-getter's HTTP module-source discovery protocol:
 
 ```hcl
 module "state_bucket" {
@@ -24,16 +26,16 @@ module "state_bucket" {
 }
 ```
 
-Note the public namespace is `modules/...`, not `templates/terraform/...` —
-it is a stable public interface, deliberately decoupled from this repo's
-internal layout. See
-[`templates/terraform/README.md`](templates/terraform/README.md) for the full
-contract, including the equivalent hand-written `git::` form and how to
-iterate locally against an unreleased change.
+The public namespace is `modules/...` — deliberately decoupled from wherever
+the source actually lives, which is exactly what let the source move out from
+under it without breaking a single pin. See
+[`pigeon-lib`'s `terraform/README.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/terraform/README.md)
+for the full contract, including the equivalent hand-written `git::` form and
+how to iterate locally against an unreleased change.
 
-The theme is consumed by a Zola site fetching a clone of this repo and running
-[`templates/zola-site/resolve-theme.sh`](templates/zola-site/resolve-theme.sh)
-against it, driven by that site's own `[extra].theme_version`.
+The theme is consumed the same way: a Zola site pins a version and runs
+`zola-site/resolve-theme.sh` out of a `pigeon-lib` checkout. This site does it
+through [`fetch-lib.sh`](fetch-lib.sh) and [`.lib-version`](.lib-version).
 
 ## Releasing
 
