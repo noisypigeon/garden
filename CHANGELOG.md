@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-15
 
+- [ci] Pin pigeon-lib at workflows/v1.0.7 ([#22](https://github.com/noisypigeon/pigeon.dev/pull/22))
 - [pigeon.dev] Rename the site root to web/ and file DEV-0162 ([#21](https://github.com/noisypigeon/pigeon.dev/pull/21))
 - [pigeon.dev] Remove the hoisted templates ([#20](https://github.com/noisypigeon/pigeon.dev/pull/20))
 - [ci] Retire the local release automation ([#19](https://github.com/noisypigeon/pigeon.dev/pull/19))
