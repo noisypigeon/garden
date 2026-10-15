@@ -37,31 +37,35 @@ against it, driven by that site's own `[extra].theme_version`.
 
 ## Releasing
 
-Every change ships through a labelled PR — the PR body becomes the changelog
-entry and GitHub Release notes verbatim, and the `release:*` label drives the
-version bump. See [`.claude/skills/release-pr/SKILL.md`](.claude/skills/release-pr/SKILL.md),
-which is the discipline; `.github/workflows/template-release.yml` is the
-automation that acts on it.
+**This repo cuts no releases.** Since DEV-0162 it holds content and its own
+deploy, and every versioned, reusable asset — the Terraform modules, the Zola
+theme, the shared CI — lives in
+[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib), which is
+where a release PR and its `release:*` label belong. [`.lib-version`](.lib-version)
+pins the version this repo consumes, and [`fetch-lib.sh`](fetch-lib.sh)
+materializes it.
 
-Every merged PR also adds one line to the root
-[`CHANGELOG.md`](CHANGELOG.md) — `template-release.yml` for releases,
-`root-changelog.yml` for everything else. Per-module and theme `CHANGELOG.md`
-files carry the full, versioned entries.
+Every merged PR still gets exactly one line in the root
+[`CHANGELOG.md`](CHANGELOG.md) — `root-changelog.yml` writes it, for every PR
+without exception, running `root-changelog.sh` out of the pinned library rather
+than a vendored copy. DEV-0160 is that contract; DEV-0162 is what left this
+workflow as the only writer of it.
 
 ## Decision records
 
-This repo's ADRs live in [`adr/pigeon.dev/`](adr/pigeon.dev), as
-`DEV-NNNN-<slug>.md`, and are written there — including future decisions about
-these templates. [`adr/noisypigeon.com/`](adr/noisypigeon.com) is a sibling
-domain holding the blog repo's own decisions, prefixed `NPC-`.
+This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`, and are
+written there. Each repo now keeps its own corpus under its own prefix —
+`noisypigeon.com` holds `NPC-` records, `pigeon-lib` holds `LIB-` ones — so this
+directory is `DEV-` only, and flat.
 
 The split itself is
-[ADR-0154](adr/pigeon.dev/DEV-0154-hoist-templates-to-pigeon-dev-repo.md); the
+[ADR-0154](adr/DEV-0154-hoist-templates-to-pigeon-dev-repo.md); the
 directly relevant history is ADR-0037 (the original `pigeon-tf` merge), ADR-0093
 and ADR-0110 (prior relocations), ADR-0109/0136 (the short-URL mechanism), and
 ADR-0112/0113/0114/0139 (the theme). The corpus itself moved here in
-[ADR-0157](adr/pigeon.dev/DEV-0157-hoist-adrs-to-pigeon-dev.md) and took its
+[ADR-0157](adr/DEV-0157-hoist-adrs-to-pigeon-dev.md) and took its
 current name and `DEV-` prefix in
-[DEV-0160](adr/pigeon.dev/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md),
-which also set the root-changelog contract below. Bare `ADR-NNNN` in older prose
-and `DEV-NNNN` refer to the same records.
+[DEV-0160](adr/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md),
+which also set the root-changelog contract above, and was flattened to `adr/` by
+[DEV-0161](adr/DEV-0161-flatten-the-adr-corpus-and-re-prefix-to-dev.md). Bare
+`ADR-NNNN` in older prose and `DEV-NNNN` refer to the same records.

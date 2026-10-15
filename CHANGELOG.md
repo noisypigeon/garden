@@ -5,29 +5,30 @@ merged PR gets exactly one line here; a PR that changes a releasable unit
 additionally gets its full PR body in that unit's own `CHANGELOG.md`. DEV-0160 is
 the contract.
 
-Not versioned — for versioned, package-scoped changelogs see
-`templates/terraform/*/*/CHANGELOG.md` (each Terraform module) and
-[`templates/zola-site/CHANGELOG.md`](templates/zola-site/CHANGELOG.md) (the
-theme, versioned since ADR-0113).
+Not versioned, and since DEV-0162 nothing in this repo is: the versioned,
+package-scoped changelogs moved to `noisypigeon/pigeon-lib` along with the
+Terraform modules and the Zola theme they describe.
 
 Entry format is `- [<tag>] <PR title> ([#N](pr-url))`, where `<tag>` is one of:
 
-- `<provider>/<module>` — a released Terraform module
-- `zola-site` — a released theme version
 - `pigeon.dev` — the Zola site under `pigeon.dev/`
 - `templates` — a `templates/` change that releases nothing (e.g. a README)
 - `adr` — decision records under `adr/`
 - `ci` — `.github/` workflows and scripts
 - `repo` — anything else (root docs, `.mise.toml`, tooling)
 
-The first two are written by `template-release.yml` as part of tagging a
-release; the rest by `root-changelog.yml`, which runs on every merged PR and
-stands down when `template-release.yml` owns the entry. Both go through
-`.github/scripts/root-changelog.sh`, which inserts below the marker at the end
+All of them are written by `root-changelog.yml`, which runs on every merged PR
+with no exceptions. It calls `root-changelog.sh` out of the pinned library
+rather than a vendored copy, and that script inserts below the marker at the end
 of this header — keep that line where it is.
 
+Entries tagged with a `<provider>/<module>` or `zola-site` would have been
+written by `template-release.yml` as part of cutting a release. None ever were:
+this repo's releases all predate DEV-0160's contract, and DEV-0162 moved the
+releasing itself to `pigeon-lib` before the case arose.
+
 This file starts at this repo's own beginning. Entries predating
-[ADR-0154](adr/pigeon.dev/DEV-0154-hoist-templates-to-pigeon-dev-repo.md), which
+[ADR-0154](adr/DEV-0154-hoist-templates-to-pigeon-dev-repo.md), which
 moved `templates/` here out of `noisypigeon/noisypigeon`, stayed in that repo's
 root `CHANGELOG.md` rather than being untangled from it — the same call ADR-0084
 made when `pigeon-cli` split out. Each module's own `CHANGELOG.md` travelled
