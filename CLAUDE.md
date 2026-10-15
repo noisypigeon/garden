@@ -75,7 +75,7 @@ here from `noisypigeon/noisypigeon/docs/adr/` by ADR-0157, renamed from
 `adr/infrastructure/` with `DEV-` IDs by DEV-0160, and flattened out of
 `adr/pigeon.dev/` by DEV-0161 once each repo started carrying its own corpus.
 The siblings now live in their own repos: `COM-` records in `noisypigeon.com` (`NPC-` in older prose is an alias, COM-0001),
-`LIB-` records in `pigeon-lib`. Before making an architectural or interface change here, read the
+`LIB-` records in `pigeon-lib`, `RUN-` records in `willowgraysen.com`. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
 contradict one, flag it rather than silently diverging, and prefer writing a new
 ADR over undocumented drift.
