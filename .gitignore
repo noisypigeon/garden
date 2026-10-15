@@ -5,11 +5,11 @@
 *.tfstate*
 # Materialized by fetch-lib.sh
 /.lib-src/
-/pigeon.dev/src/public
-/pigeon.dev/src/content/modules/*.md
-!/pigeon.dev/src/content/modules/_index.md
-/pigeon.dev/src/content/theme-versions/*.md
-!/pigeon.dev/src/content/theme-versions/_index.md
-/pigeon.dev/src/content/releases/*.md
-!/pigeon.dev/src/content/releases/_index.md
-/pigeon.dev/src/themes/zola-site
+/web/public
+/web/content/modules/*.md
+!/web/content/modules/_index.md
+/web/content/theme-versions/*.md
+!/web/content/theme-versions/_index.md
+/web/content/releases/*.md
+!/web/content/releases/_index.md
+/web/themes/zola-site

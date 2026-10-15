@@ -44,7 +44,9 @@ jobs:
 
           # One line per PR means one tag per PR: first match in this fixed
           # precedence wins, even for a PR spanning several areas.
-          if echo "$CHANGED_FILES" | grep -q '^pigeon\.dev/'; then
+          # Matches web/, labelled pigeon.dev: the directory was renamed by
+          # DEV-0162, the site it publishes was not.
+          if echo "$CHANGED_FILES" | grep -q '^web/'; then
             TAG="pigeon.dev"
           elif echo "$CHANGED_FILES" | grep -q '^adr/'; then
             TAG="adr"
