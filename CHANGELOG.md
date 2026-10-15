@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-15
 
+- [repo] docs: name noisypigeon.com's ADR prefix as COM- ([#23](https://github.com/noisypigeon/pigeon.dev/pull/23))
 - [ci] Pin pigeon-lib at workflows/v1.0.7 ([#22](https://github.com/noisypigeon/pigeon.dev/pull/22))
 - [pigeon.dev] Rename the site root to web/ and file DEV-0162 ([#21](https://github.com/noisypigeon/pigeon.dev/pull/21))
 - [pigeon.dev] Remove the hoisted templates ([#20](https://github.com/noisypigeon/pigeon.dev/pull/20))
