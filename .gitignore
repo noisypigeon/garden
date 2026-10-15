@@ -5,6 +5,7 @@
 *.tfstate*
 # Materialized by fetch-lib.sh
 /.lib-src/
+.terragrunt-cache/
 /web/public
 /web/content/modules/*.md
 !/web/content/modules/_index.md

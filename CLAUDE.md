@@ -1,9 +1,41 @@
 # CLAUDE.md
 
-This repo is `pigeon.dev`: the Zola site under `web/`, and the
-short-URL host that resolves Terraform module sources. It is a **spoke** in the
-hub-and-spoke architecture of LIB-0001 — content plus its own deploy, consuming
-every reusable asset from the hub by pinned version.
+This repo is `pigeon.dev`: the Zola site under `web/`, the short-URL host that
+resolves Terraform module sources, and — since DEV-0163 — the Terraform that
+serves the domain, under `terraform/`. It is a **spoke** in the hub-and-spoke
+architecture of LIB-0001 — content plus the infrastructure that serves it,
+consuming every reusable asset from the hub by pinned version.
+
+## Terraform
+
+`terraform/` holds four leaves: `fastmail/dns`, `project`, `state/bucket` and
+`wiki/dns`. They were hoisted from `noisypigeon/noisypigeon`'s `pigeon.dev/terraform/`
+with their history (DEV-0163), and kept their state: `root.hcl` sits at this
+repo's root, so each leaf's key is still `terraform/<leaf>/terraform.tfstate` in
+this domain's own bucket (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf
+changes its state key** — don't, without a state-move runbook (DEV-0106).
+
+- **`root.hcl` is generated — never edit it.** It is pigeon-lib's
+  `terragrunt/root-hcl` template at the version `spoke.hcl` pins
+  (`root_hcl_version`), copied by `.lib-src/.github/scripts/resolve-root-hcl.sh`
+  and committed. Committed rather than ignored because Terragrunt's git filter
+  plans inside git worktrees, which only hold tracked files (LIB-0003). CI runs
+  the resolver with `--check` and fails on drift. To take a template change, bump
+  `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
+- **`spoke.hcl`** holds this spoke's instance values: the template version and
+  `state_bucket_secret` (`PIGEON_DEV_TERRAFORM_STATE_BUCKET_NAME`).
+- **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has
+  the recipient). Edit with `mise run secrets-edit`. CI decrypts with the
+  `SOPS_AGE_KEY` repo secret.
+- **`state/iam` is not here.** It mints the deploy key these leaves authenticate
+  with, and must not depend on that key, so it stays in `noisypigeon/noisypigeon`
+  on that repo's shared root and shared state bucket (LIB-0001 §8; DEV-0130/0133;
+  DEV-0163). Rotating the deploy key is a PR *there*, then a `secrets-edit` here.
+
+A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting
+`terragrunt apply` on it (`terragrunt-apply.yml`; ADR-0124/0129). A successful
+apply sets the `terragrunt/apply` status this repo's ruleset requires and
+squash-merges the PR. Never merge a Terraform PR any other way.
 
 `templates/` is gone. DEV-0162 moved `templates/terraform/` and
 `templates/zola-site/` to `noisypigeon/pigeon-lib`, where they live as
@@ -80,8 +112,11 @@ and cutting its deploy over from a Scaleway bucket to GitHub Pages).
 
 ## Dev cycle
 
-Every change ships through a PR. There is no human reviewer and no branch
-protection. **This repo cuts no releases and carries no `release:*` label** —
+Every change ships through a PR. There is no human reviewer. `main` has a
+ruleset (DEV-0163, copied from `noisypigeon`'s ADR-0129): no force-push, and the
+`terragrunt/apply` status is required — `terragrunt-plan.yml`'s detect job sets
+it to success straight away for a PR touching no Terraform. **This repo cuts no
+releases and carries no `release:*` label** —
 since DEV-0162 it is a spoke, holding content and its own deploy, and every
 versioned asset lives in `noisypigeon/pigeon-lib`. A release PR belongs there.
 
@@ -93,12 +128,16 @@ with no `paths:` filter and no stand-down case, since there is no longer a
 `<!-- entries below; newest first -->` marker is where entries get inserted —
 the script refuses to write without it.
 
-Only two workflows remain, and both read their logic out of the pinned library:
+Four workflows, all thin callers reading their logic out of the pinned library:
 
 - `root-changelog.yml` — a thin caller of `pigeon-lib`'s reusable
   `spoke-root-changelog.yml`, passing this repo's tag precedence (`web/` →
-  `pigeon.dev`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). The reusable
+  `pigeon.dev`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
+  `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). The reusable
   fetches the library and runs its `root-changelog.sh`.
+- `terragrunt-plan.yml` / `terragrunt-apply.yml` — thin callers of
+  `pigeon-lib`'s `terragrunt-detect.yml` and `terragrunt-run.yml`; see
+  "Terraform" above.
 - `pigeon-dev-pages.yml` — a thin caller of `pigeon-lib`'s reusable
   `zola-site-pages.yml`, which resolves the theme and regenerates the redirect
   pages, overview pages and release posts from the **library's** tags and
@@ -106,7 +145,7 @@ Only two workflows remain, and both read their logic out of the pinned library:
   deploys to the *calling* repo's Pages site, which is why this caller is here
   and not in the hub.
 
-`.lib-version` pins the library ref both of them consume; `fetch-lib.sh`
+`.lib-version` pins the library ref all of them consume; `fetch-lib.sh`
 materializes it into a gitignored `.lib-src/`. Bumping that pin is how this repo
 takes a library change — never by tracking a branch (LIB-0001 invariant 2).
 `fetch-lib.sh` is the deliberate exception to "a spoke contains no scripts": a
@@ -125,5 +164,8 @@ iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
   theme out of it, regenerates the redirect/overview/release pages, then runs
   `zola build`/`zola serve`.
 
-There are no Terraform tasks here any more; `fmt-terraform` and friends moved to
-`pigeon-lib` with the modules (DEV-0162).
+- `mise run plan` / `mise run apply` — fetch the library, regenerate `root.hcl`,
+  then `terragrunt run --all`. Prefer the PR flow for `apply`.
+- `mise run terraform-prepare` — just the fetch and `root.hcl` regeneration.
+- `mise run fmt-terraform` / `mise run fmt-check-terraform`.
+- `mise run secrets-edit` — edit `terraform/secrets.enc` in place.

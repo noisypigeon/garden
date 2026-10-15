@@ -1,8 +1,12 @@
 [tools]
 zola = "0.23.6"
+terraform = "1.16.3"
+terragrunt = "1.1.6"
+sops = "3.13.3"
 
-# No terraform: the modules moved to noisypigeon/pigeon-lib (LIB-0002), and so
-# did the fmt tasks that checked them. This repo is content.
+[env]
+# terragrunt defaults to invoking `tofu`; this family standardizes on Terraform.
+TG_TF_PATH = "terraform"
 
 # resolve-theme.sh and the redirect generator both resolve their own root from
 # their own location rather than this repo's, so running the copies under
@@ -25,3 +29,30 @@ run = [
   "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
   "zola serve",
 ]
+
+# Terraform (DEV-0163). root.hcl is generated from pigeon-lib's template at the
+# version spoke.hcl pins and committed; terraform-prepare regenerates it, so
+# after bumping root_hcl_version, run it and commit the diff. The leaves under
+# terraform/ keep the state keys they had in noisypigeon.
+[tasks.terraform-prepare]
+run = [
+  "./fetch-lib.sh",
+  ".lib-src/.github/scripts/resolve-root-hcl.sh",
+]
+
+[tasks.plan]
+depends = ["terraform-prepare"]
+run = "terragrunt run --all -- plan"
+
+[tasks.apply]
+depends = ["terraform-prepare"]
+run = "terragrunt run --all -- apply"
+
+[tasks.fmt-terraform]
+run = ["terragrunt hcl format", "terraform fmt -recursive terraform"]
+
+[tasks.fmt-check-terraform]
+run = ["terragrunt hcl format --check", "terraform fmt -recursive -check terraform"]
+
+[tasks.secrets-edit]
+run = "sops --input-type dotenv --output-type dotenv terraform/secrets.enc"
