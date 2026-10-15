@@ -95,8 +95,10 @@ the script refuses to write without it.
 
 Only two workflows remain, and both read their logic out of the pinned library:
 
-- `root-changelog.yml` — runs `./fetch-lib.sh`, then
-  `.lib-src/.github/scripts/root-changelog.sh`.
+- `root-changelog.yml` — a thin caller of `pigeon-lib`'s reusable
+  `spoke-root-changelog.yml`, passing this repo's tag precedence (`web/` →
+  `pigeon.dev`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). The reusable
+  fetches the library and runs its `root-changelog.sh`.
 - `pigeon-dev-pages.yml` — a thin caller of `pigeon-lib`'s reusable
   `zola-site-pages.yml`, which resolves the theme and regenerates the redirect
   pages, overview pages and release posts from the **library's** tags and
