@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-15
 
+- [pigeon.dev] Remove the hoisted templates ([#20](https://github.com/noisypigeon/pigeon.dev/pull/20))
 - [ci] Retire the local release automation ([#19](https://github.com/noisypigeon/pigeon.dev/pull/19))
 
 ## 2026-10-14
