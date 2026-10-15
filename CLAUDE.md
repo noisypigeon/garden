@@ -8,12 +8,26 @@ consuming every reusable asset from the hub by pinned version.
 
 ## Terraform
 
-`terraform/` holds four leaves: `fastmail/dns`, `project`, `state/bucket` and
-`wiki/dns`. They were hoisted from `noisypigeon/noisypigeon`'s `pigeon.dev/terraform/`
-with their history (DEV-0163), and kept their state: `root.hcl` sits at this
-repo's root, so each leaf's key is still `terraform/<leaf>/terraform.tfstate` in
-this domain's own bucket (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf
-changes its state key** — don't, without a state-move runbook (DEV-0106).
+`terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`,
+where `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. This
+repo was its first adopter. Four leaves:
+
+| Leaf | What it is |
+| --- | --- |
+| `cloudflare/dns-record/fastmail` | Fastmail's DKIM CNAMEs, MX and SPF |
+| `cloudflare/dns-record/github-pages` | apex and `www` CNAMEs to GitHub Pages |
+| `scaleway/project/dev` | this domain's Scaleway project |
+| `scaleway/object-bucket/terraform-state` | this domain's Terraform state bucket |
+
+A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several
+instances). A new leaf goes under that module's coordinate, with a kebab-case
+`<instance>` naming what it is for. They were hoisted from `noisypigeon/noisypigeon`
+with their history (DEV-0163) and renamed into this layout by moving their state
+(LIB-0004 §3). Each leaf's state key is `terraform/<provider>/<module>/<instance>/terraform.tfstate`
+in this domain's own bucket, because `root.hcl` sits at this repo's root (LIB-0001
+invariant 4). **Moving `root.hcl` or a leaf changes its state key** — don't,
+without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, then
+`state rm` everything at the old key.
 
 - **`root.hcl` is generated — never edit it.** It is pigeon-lib's
   `terragrunt/root-hcl` template at the version `spoke.hcl` pins
