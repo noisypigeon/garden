@@ -36,6 +36,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-15
+
+- [ci] Retire the local release automation ([#19](https://github.com/noisypigeon/pigeon.dev/pull/19))
+
 ## 2026-10-14
 
 - [pigeon.dev] Consume pigeon-lib at a pinned version ([#18](https://github.com/noisypigeon/pigeon.dev/pull/18))
