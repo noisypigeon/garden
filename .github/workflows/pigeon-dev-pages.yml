@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.0.3
+    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.0.4
     with:
       src_dir: pigeon.dev/src
       build_cmd: "zola build"

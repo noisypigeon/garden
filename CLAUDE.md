@@ -35,12 +35,12 @@ for the module index.
 
 ## Where the decisions live
 
-ADRs live in this repo, under `adr/`, one directory per decision domain. The
-`pigeon.dev` domain is `adr/pigeon.dev/DEV-NNNN-<slug>.md` — hoisted here from
-`noisypigeon/noisypigeon/docs/adr/` by ADR-0157 and renamed from
-`adr/infrastructure/` with `DEV-` IDs by DEV-0160. Its sibling is
-`adr/noisypigeon.com/NPC-NNNN-<slug>.md` (NPC-0000), the blog repo's own
-decisions. Before making an architectural or interface change here, read the
+ADRs live in this repo, flat under `adr/`, as `DEV-NNNN-<slug>.md` — hoisted
+here from `noisypigeon/noisypigeon/docs/adr/` by ADR-0157, renamed from
+`adr/infrastructure/` with `DEV-` IDs by DEV-0160, and flattened out of
+`adr/pigeon.dev/` by DEV-0161 once each repo started carrying its own corpus.
+The siblings now live in their own repos: `NPC-` records in `noisypigeon.com`,
+`LIB-` records in `pigeon-lib`. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
 contradict one, flag it rather than silently diverging, and prefer writing a new
 ADR over undocumented drift.
@@ -49,8 +49,7 @@ Filing a `pigeon.dev` ADR, by hand — `adr-new.sh` lives in
 `noisypigeon/noisypigeon` and still hardcodes the old path, so it cannot create
 these (DEV-0160):
 
-- **Number**: max+1 **within `adr/pigeon.dev/`**, which is the only sequence it
-  shares. `0136`, `0138` and `0156` are each used twice already, from parallel
+- **Number**: max+1 **within `adr/`**, which is the only sequence it shares. `0136`, `0138` and `0156` are each used twice already, from parallel
   branches — check before claiming a number.
 - **Filename and H1 agree**: `DEV-0160-<slug>.md` holds `# DEV-0160: <title>`.
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
@@ -78,46 +77,48 @@ and cutting its deploy over from a Scaleway bucket to GitHub Pages).
 
 ## Dev cycle
 
-Every change ships through a labelled PR — see the `release-pr` skill, which is
-the discipline, not just a convenience. The PR body becomes the changed unit's
-`CHANGELOG.md` entry and GitHub Release notes **verbatim**, and exactly one
-`release:*` label drives the version bump. There is no human reviewer and no
-branch protection.
+Every change ships through a PR. There is no human reviewer and no branch
+protection. **This repo cuts no releases and carries no `release:*` label** —
+since DEV-0162 it is a spoke, holding content and its own deploy, and every
+versioned asset lives in `noisypigeon/pigeon-lib`. A release PR belongs there.
 
 Every merged PR gets exactly one line in the root `CHANGELOG.md`, under a
-`## YYYY-MM-DD` section, newest first; a PR that changes a releasable unit
-additionally gets its full PR body in that unit's own `CHANGELOG.md`. That is
-DEV-0160's contract, and `.github/scripts/root-changelog.sh` is the single
-implementation both writers call. `template-release.yml` writes the line for
-module and theme releases; `root-changelog.yml` runs on every merged PR and
-covers everything else (`pigeon.dev/`, `templates/` without a release, `adr/`,
-`.github/`, root docs), standing down when `template-release.yml` owns the
-entry. The root file's `<!-- entries below; newest first -->` marker is where
-entries get inserted — the script refuses to write without it.
+`## YYYY-MM-DD` section, newest first. That is DEV-0160's contract, and
+`root-changelog.yml` is now its only writer here — it runs on every merged PR
+with no `paths:` filter and no stand-down case, since there is no longer a
+`template-release.yml` to hand off to. The root file's
+`<!-- entries below; newest first -->` marker is where entries get inserted —
+the script refuses to write without it.
 
-On merge, `template-release.yml` tags each changed module (or the theme),
-updates its `CHANGELOG.md` and the root one, cuts a GitHub Release, and then
-dispatches whichever site deploy(s) that release actually affects. A module
-release dispatches `pigeon-dev-pages.yml` **in this repo** — `pigeon.dev/src`
-lives here now (ADR-0156), so its redirect pages and release posts regenerate
-from this repo's own tags and `CHANGELOG.md` files with no cross-repo call. A
-`templates/zola-site` release additionally dispatches `zola-sites-deploy.yml`
-**in `noisypigeon/noisypigeon`** with `site=noisypigeon.com`, since that's the
-one remaining site this repo doesn't host; that dispatch needs
-`BOT_GITHUB_TOKEN` to carry `actions: write` on that repo, and if it fails the
-theme is tagged here but `noisypigeon.com` never rebuilds against it.
-`module-docs.yml` separately regenerates each module's input/output table on
-any `.tf` change.
+Only two workflows remain, and both read their logic out of the pinned library:
 
-A change spanning a module and its consumer is two PRs in two repos: this one
-merges, tags and deploys first, then the consumer's `source =` pin is bumped in
-`noisypigeon/noisypigeon`. For local iteration before tagging, a consumer can
-point `source =` at a relative path into a sibling clone of this repo instead.
+- `root-changelog.yml` — runs `./fetch-lib.sh`, then
+  `.lib-src/.github/scripts/root-changelog.sh`.
+- `pigeon-dev-pages.yml` — a thin caller of `pigeon-lib`'s reusable
+  `zola-site-pages.yml`, which resolves the theme and regenerates the redirect
+  pages, overview pages and release posts from the **library's** tags and
+  `CHANGELOG.md` files before `zola build`. `actions/deploy-pages` always
+  deploys to the *calling* repo's Pages site, which is why this caller is here
+  and not in the hub.
+
+`.lib-version` pins the library ref both of them consume; `fetch-lib.sh`
+materializes it into a gitignored `.lib-src/`. Bumping that pin is how this repo
+takes a library change — never by tracking a branch (LIB-0001 invariant 2).
+`fetch-lib.sh` is the deliberate exception to "a spoke contains no scripts": a
+spoke cannot fetch its own fetcher.
+
+A change spanning a module and its consumer is two PRs in two repos: the
+`pigeon-lib` one merges, tags and dispatches the deploy first, then the
+consumer's `source =` pin is bumped in `noisypigeon/noisypigeon`. For local
+iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
+`fetch-lib.sh` leaves it alone.
 
 ## Commands
 
-- `mise run fmt-terraform` / `mise run fmt-check-terraform` — format / check
-  formatting for Terraform files.
 - `mise run pigeon-dev-build` / `mise run pigeon-dev-serve` — build / serve
-  `pigeon.dev/src` with Zola (resolves the theme, regenerates redirect/
-  overview/release pages, then `zola build`/`zola serve`).
+  `pigeon.dev/src` with Zola. Each fetches the pinned library, resolves the
+  theme out of it, regenerates the redirect/overview/release pages, then runs
+  `zola build`/`zola serve`.
+
+There are no Terraform tasks here any more; `fmt-terraform` and friends moved to
+`pigeon-lib` with the modules (DEV-0162).
