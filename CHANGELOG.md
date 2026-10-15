@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-15
 
+- [terraform] refactor(terraform): move the DNS leaves onto cloudflare/dns-record ([#28](https://github.com/noisypigeon/pigeon.dev/pull/28))
 - [repo] docs: list willowgraysen.com's RUN- ADR domain ([#27](https://github.com/noisypigeon/pigeon.dev/pull/27))
 - [terraform] fix(terraform): point the state bucket output at terraform/secrets.enc ([#26](https://github.com/noisypigeon/pigeon.dev/pull/26))
 - [terraform] feat(dev-0163)!: run pigeon.dev's Terraform from this repo ([#25](https://github.com/noisypigeon/pigeon.dev/pull/25))
