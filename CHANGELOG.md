@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-15
 
+- [repo] docs: list willowgraysen.com's RUN- ADR domain ([#27](https://github.com/noisypigeon/pigeon.dev/pull/27))
 - [terraform] fix(terraform): point the state bucket output at terraform/secrets.enc ([#26](https://github.com/noisypigeon/pigeon.dev/pull/26))
 - [terraform] feat(dev-0163)!: run pigeon.dev's Terraform from this repo ([#25](https://github.com/noisypigeon/pigeon.dev/pull/25))
 - [ci] Call pigeon-lib's reusable root-changelog workflow ([#24](https://github.com/noisypigeon/pigeon.dev/pull/24))
