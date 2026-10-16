@@ -6,10 +6,12 @@
 locals {
   # pigeon-lib tag terragrunt/root-hcl/v<version>, or "main" for the fetched
   # clone's working tree. Bumping it is how this repo takes a template change.
-  root_hcl_version = "2.0.0"
+  root_hcl_version = "2.1.0"
 
-  # terraform/secrets.enc key naming this spoke's own state bucket (ADR-0130).
-  state_bucket_secret = "PIGEON_DEV_TERRAFORM_STATE_BUCKET_NAME"
+  # terraform/secrets.enc key naming this spoke's own state bucket: since
+  # DEV-0164 the R2 one, on the cloudflare backend (LIB-0007).
+  state_bucket_secret = "PIGEON_DEV_R2_TERRAFORM_STATE_BUCKET_NAME"
+  state_backend       = "cloudflare"
 
   # Which providers this spoke's leaves get (LIB-0005). A provider absent from
   # the map is off; `leaves` scopes one to path prefixes ending in "/".
