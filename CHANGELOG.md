@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [terraform] chore(terraform): destroy the old Scaleway state bucket ([#35](https://github.com/noisypigeon/pigeon.dev/pull/35))
 - [terraform] chore(terraform): let the old Scaleway state bucket be destroyed with its contents ([#34](https://github.com/noisypigeon/pigeon.dev/pull/34))
 - [terraform] feat(terraform): move this domain's Terraform state to Cloudflare R2, backed up to B2 (DEV-0164) ([#33](https://github.com/noisypigeon/pigeon.dev/pull/33))
 - [terraform] feat(terraform): add the R2 state bucket and its B2 backup (DEV-0164) ([#32](https://github.com/noisypigeon/pigeon.dev/pull/32))
