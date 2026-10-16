@@ -12,13 +12,12 @@ interface with a stability guarantee, and serving it is a property of the
 domain, not of the code.
 
 So this repo is content, its own deploy, and — since DEV-0163 — the Terraform
-that serves the domain: DNS for the site and the wiki, the Fastmail records, the
-Scaleway project, and its own state bucket, under [`terraform/`](terraform). It
-holds no templates and no scripts beyond [`fetch-lib.sh`](fetch-lib.sh); its
-[`root.hcl`](root.hcl) is generated from `pigeon-lib`'s template at the version
-[`spoke.hcl`](spoke.hcl) pins, and committed. One leaf deliberately stayed
-behind: `state/iam`, which mints this domain's deploy key, still runs from
-`noisypigeon/noisypigeon` (LIB-0001 §8, DEV-0163).
+that serves the domain: DNS for the site and the wiki, the Fastmail records, and
+its own Terraform state bucket on Cloudflare R2 with a Backblaze B2 backup
+(DEV-0164), under [`terraform/`](terraform). It holds no templates and no
+scripts beyond [`fetch-lib.sh`](fetch-lib.sh); its [`root.hcl`](root.hcl) is
+generated from `pigeon-lib`'s template at the version [`spoke.hcl`](spoke.hcl)
+pins, and committed.
 
 ## Consuming
 

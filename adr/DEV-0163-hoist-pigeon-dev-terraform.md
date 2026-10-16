@@ -3,6 +3,8 @@
 - **Author**: Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).
 - **Date**: 2026-10-15.
 - **Status**: Accepted.
+- **Amended 2026-10-16**: DEV-0164 moved the state to R2 and retired the Scaleway project, the
+  state bucket and `state/iam`'s deploy key. The arrangement below is historical.
 
 ## Context
 

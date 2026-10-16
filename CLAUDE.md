@@ -40,8 +40,9 @@ without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, th
 - **`spoke.hcl`** holds this spoke's instance values: the template version,
   `state_bucket_secret` (`PIGEON_DEV_R2_TERRAFORM_STATE_BUCKET_NAME`),
   `state_backend = "cloudflare"` (LIB-0007, DEV-0164) and the `providers` map
-  (LIB-0005) — `cloudflare` and `scaleway` on for every leaf, `backblaze` for
-  `terraform/backblaze/` only.
+  (LIB-0005) — `cloudflare` on for every leaf, `backblaze` for
+  `terraform/backblaze/` only. Scaleway is off: this domain has had no Scaleway
+  resources since DEV-0164.
 - **State is on Cloudflare R2, backed up to Backblaze B2** (DEV-0164). R2 has no
   object versioning, so `state-backup.yml` copies every state object to a
   versioned B2 bucket after each apply and daily. Its B2 key can list and write,
@@ -55,10 +56,6 @@ without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, th
   `SOPS_AGE_KEY` repo secret. The R2 S3 keys (`CLOUDFLARE_R2_*`) are made by
   hand in the Cloudflare dashboard — there is no Terraform resource for them —
   scoped to the state bucket with *Object Read & Write*.
-- **`state/iam` is not here.** It mints the deploy key these leaves authenticate
-  with, and must not depend on that key, so it stays in `noisypigeon/noisypigeon`
-  on that repo's shared root and shared state bucket (LIB-0001 §8; DEV-0130/0133;
-  DEV-0163). Rotating the deploy key is a PR *there*, then a `secrets-edit` here.
 
 A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting
 `terragrunt apply` on it (`terragrunt-apply.yml`; ADR-0124/0129). A successful
