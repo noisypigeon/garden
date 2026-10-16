@@ -1,7 +1,6 @@
 # DNS records to point noisypigeon.garden (apex + www) at GitHub Pages
-# (noisypigeon.github.io), the site's home from DEV-0165 on. Both DNS-only
-# (proxied = false), the same shape as pigeon.dev's before it: GitHub Pages
-# issues its own Let's Encrypt certificate for the custom domain, which it
+# (noisypigeon.github.io), the site's home (DEV-0165). Both DNS-only
+# (proxied = false): GitHub Pages issues its own Let's Encrypt certificate for the custom domain, which it
 # cannot do while Cloudflare is proxying (and terminating TLS for) the apex,
 # and it redirects www -> apex natively, so no redirect rule is needed here.
 #

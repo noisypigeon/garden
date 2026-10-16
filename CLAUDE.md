@@ -2,10 +2,8 @@
 
 This repo is `noisypigeon/garden`. It holds the Zola site under `web/`, published at
 `https://noisypigeon.garden`, which is also the short-URL host that resolves
-Terraform module sources (LIB-0009). Since DEV-0163 it also holds the Terraform
-that serves the domain, under `terraform/`. Until DEV-0165 it was
-`noisypigeon/pigeon.dev`, serving `pigeon.dev`. That domain's zone now lives in
-`noisypigeon/noisypigeon.com` and 301s here. It is a **spoke** in the hub-and-spoke
+Terraform module sources (LIB-0009). It also holds the Terraform that serves
+the domain, under `terraform/`. It is a **spoke** in the hub-and-spoke
 architecture of LIB-0001 — content plus the infrastructure that serves it,
 consuming every reusable asset from the hub by pinned version.
 
@@ -27,10 +25,7 @@ zone, `terraform/cloudflare/<zone>/<module>/<instance>/` (LIB-0008), and writes
 
 A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several
 instances). A new leaf goes under that module's coordinate, with a kebab-case
-`<instance>` naming what it is for. They were hoisted from `noisypigeon/noisypigeon`
-with their history (DEV-0163) and renamed into this layout by moving their state
-(LIB-0004 §3), then under their zone (LIB-0008 §3). `pigeon.dev`'s zone leaves moved to
-`noisypigeon/noisypigeon.com` (DEV-0165 §4). Each leaf's state key is its path plus `/terraform.tfstate`
+`<instance>` naming what it is for. Each leaf's state key is its path plus `/terraform.tfstate`
 in this domain's own R2 bucket, because `root.hcl` sits at this repo's root (LIB-0001
 invariant 4). **Moving `root.hcl` or a leaf changes its state key** — don't,
 without LIB-0008 §3: copy the state object to the new key, check it against a
@@ -68,8 +63,7 @@ A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting
 apply sets the `terragrunt/apply` status this repo's ruleset requires and
 squash-merges the PR. Never merge a Terraform PR any other way.
 
-`templates/` is gone. DEV-0162 moved `templates/terraform/` and
-`templates/zola-site/` to `noisypigeon/pigeon-lib`, where they live as
+The Terraform modules and the Zola theme live in `noisypigeon/pigeon-lib` as
 `terraform/` and `zola-site/`, are tagged
 `terraform/<provider>/<module>/vX.Y.Z` and `zola-site/vX.Y.Z`, and own their
 `CHANGELOG.md` files. The shared CI went with them, tagged `workflows/vX.Y.Z`.
@@ -77,7 +71,7 @@ Do not add a module, a theme file, or a reusable script here — it belongs in t
 hub.
 
 What stayed, and why: `noisypigeon.garden/terraform/<provider>/<module>/vX.Y.Z`
-is a public interface (LIB-0009, after ADR-0109/0110), and serving it is a
+is a public interface (LIB-0009), and serving it is a
 property of the domain rather than of the code. The generated pages land in
 `web/content/terraform/` (redirect and overview pages),
 `web/content/theme-versions/` and `web/content/releases/`. The hub's
@@ -85,29 +79,13 @@ property of the domain rather than of the code. The generated pages land in
 reading the **hub's** tags and `CHANGELOG.md` files out of the fetched
 `.lib-src/`. Only each directory's `_index.md` is tracked.
 **A failed deploy here breaks every consumer's `terraform init`.**
-`pigeon.dev/modules/…`, the interface's old address, was retired with no
-redirect (LIB-0009 §2).
-
-The history is worth knowing when reading older records: ADR-0154 hoisted
-`templates/` here from `noisypigeon/noisypigeon` keeping the `templates/…` paths
-byte-identical, and ADR-0156 then hoisted the site in as `pigeon.dev/src`
-alongside it,
-which let the generator read `templates/` off local disk and let
-`resolve-theme.sh` use a live `"main"` symlink. DEV-0162 undid both of those
-localisations: everything is fetched again now, but pinned to a version rather
-than tracking a branch, and renamed the site root from `pigeon.dev/src` to
-`web/`. DEV-0165 then renamed the repo, moved the site to `noisypigeon.garden`
-and handed `pigeon.dev`'s zone to `noisypigeon.com`.
 
 See `README.md` for the consumption contract.
 
 ## Where the decisions live
 
-ADRs live in this repo, flat under `adr/`, as `DEV-NNNN-<slug>.md` — hoisted
-here from `noisypigeon/noisypigeon/docs/adr/` by ADR-0157, renamed from
-`adr/infrastructure/` with `DEV-` IDs by DEV-0160, and flattened out of
-`adr/pigeon.dev/` by DEV-0161 once each repo started carrying its own corpus.
-The siblings now live in their own repos: `COM-` records in `noisypigeon.com` (`NPC-` in older prose is an alias, COM-0001),
+ADRs live in this repo, flat under `adr/`, as `DEV-NNNN-<slug>.md`.
+The siblings live in their own repos: `COM-` records in `noisypigeon.com` (`NPC-` in older prose is an alias, COM-0001),
 `LIB-` records in `pigeon-lib`, `RUN-` records in `noisypigeon/willowgraysen`. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
 contradict one, flag it rather than silently diverging, and prefer writing a new
@@ -132,17 +110,11 @@ these (DEV-0160):
 - Genuinely-deferred `## Out of scope` items get a GitHub issue filed against
   `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
 
-The load-bearing ones for this repo: ADR-0154 (the split that brought
-`templates/` here; its prefix→repo mapping, which kept 20 legacy `modules/*`-era
-tags resolving against `noisypigeon/noisypigeon`, was retired by DEV-0160 step 0
-once nothing pinned them — every module tag now lives here, under one prefix),
-ADR-0037/0093/0110 (this directory's prior homes and why old tags still
-resolve), ADR-0109/0136 (the short-URL redirect
-mechanism and its move to the `pigeon.dev` host; LIB-0009 moved it again, to
-`noisypigeon.garden/terraform/`), DEV-0165 (this repo's rename and move), ADR-0119/0120/0153 (the
-modules' current composition shape), ADR-0112/0113/0114/0139 (the theme, its
-versioning, and its resolution), and ADR-0156 (hoisting `pigeon.dev/src` here
-and cutting its deploy over from a Scaleway bucket to GitHub Pages).
+The load-bearing ones for this repo: LIB-0009 (the
+`noisypigeon.garden/terraform/` short-URL interface this site serves), DEV-0165
+(this repo's domain, zone and Pages setup), ADR-0156 (the GitHub Pages deploy),
+ADR-0112/0113/0114/0139 (the theme, its versioning, and its resolution), and
+DEV-0163/DEV-0164 (this repo's Terraform and its R2 state).
 
 ## Dev cycle
 
@@ -151,7 +123,7 @@ ruleset (DEV-0163, copied from `noisypigeon`'s ADR-0129): no force-push, and the
 `terragrunt/apply` status is required — `terragrunt-plan.yml`'s detect job sets
 it to success straight away for a PR touching no Terraform. **This repo cuts no
 releases and carries no `release:*` label** —
-since DEV-0162 it is a spoke, holding content and its own deploy, and every
+it is a spoke, holding content and its own deploy, and every
 versioned asset lives in `noisypigeon/pigeon-lib`. A release PR belongs there.
 
 Every merged PR gets exactly one line in the root `CHANGELOG.md`, under a
@@ -166,7 +138,7 @@ Five workflows, all thin callers reading their logic out of the pinned library:
 
 - `root-changelog.yml` — a thin caller of `pigeon-lib`'s reusable
   `spoke-root-changelog.yml`, passing this repo's tag precedence (`web/` →
-  `pigeon.dev`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
+  `garden`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
   `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). The reusable
   fetches the library and runs its `root-changelog.sh`.
 - `terragrunt-plan.yml` / `terragrunt-apply.yml` — thin callers of

@@ -2,26 +2,22 @@
 
 The Zola site published at [`noisypigeon.garden`](https://noisypigeon.garden),
 and the short-URL host that resolves Terraform module sources to the repo
-holding them. Until DEV-0165 this repo was `noisypigeon/pigeon.dev` and the
-site was `pigeon.dev`. That domain now redirects here, and its old
-`pigeon.dev/modules/...` short URLs no longer resolve
+holding them
 ([LIB-0009](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md)).
 
-**The templates themselves aren't here.** DEV-0162 moved them to
-[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib), where
-they live as `terraform/` and `zola-site/` and are tagged and released. What
+**The modules and theme themselves aren't here.** They live in
+[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib) as
+`terraform/` and `zola-site/`, where they are tagged and released. What
 this repo keeps is the thing a domain has to serve: the public
 `noisypigeon.garden/terraform/...` interface.
 
 So this repo is content, its own deploy, and the Terraform that serves the
-domain (DEV-0163) under [`terraform/`](terraform):
+domain under [`terraform/`](terraform):
 
 - the `noisypigeon.garden` DNS for GitHub Pages;
 - its own Terraform state bucket on Cloudflare R2, with a Backblaze B2 backup
   (DEV-0164).
 
-`pigeon.dev`'s DNS, including its Fastmail records and the redirect, lives in
-[`noisypigeon/noisypigeon.com`](https://github.com/noisypigeon/noisypigeon.com).
 This repo holds no templates and no scripts beyond [`fetch-lib.sh`](fetch-lib.sh).
 Its [`root.hcl`](root.hcl) is generated from `pigeon-lib`'s template at the
 version [`spoke.hcl`](spoke.hcl) pins, and committed.
@@ -65,8 +61,8 @@ contract.
 
 ## Decision records
 
-This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`. The prefix
-stayed `DEV-` through the rename (LIB-0009). Each repo keeps its own corpus:
+This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`. Each repo keeps
+its own corpus:
 
 - `noisypigeon/noisypigeon.com` holds `COM-` records (formerly `NPC-`);
 - `noisypigeon/pigeon-lib` holds `LIB-` records;
@@ -76,12 +72,10 @@ Bare `ADR-NNNN` in older prose and `DEV-NNNN` refer to the same records.
 
 These records are directly relevant:
 
+- **[LIB-0009](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md):**
+  the short-URL interface this site serves.
 - **[DEV-0165](adr/DEV-0165-pigeon-dev-becomes-noisypigeon-garden.md):** this
-  repo's move to `noisypigeon.garden`.
-- **ADR-0109/0136:** the short-URL mechanism, which LIB-0009 moved to this host.
+  repo's domain, zone and Pages setup.
 - **ADR-0112/0113/0114/0139:** the theme.
-- **[ADR-0154](adr/DEV-0154-hoist-templates-to-pigeon-dev-repo.md),
-  [ADR-0157](adr/DEV-0157-hoist-adrs-to-pigeon-dev.md),
-  [DEV-0160](adr/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md)
-  and [DEV-0161](adr/DEV-0161-flatten-the-adr-corpus-and-re-prefix-to-dev.md):**
-  how this corpus got here.
+- **[DEV-0160](adr/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md):**
+  the root-changelog contract.
