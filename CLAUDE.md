@@ -1,8 +1,11 @@
 # CLAUDE.md
 
-This repo is `pigeon.dev`: the Zola site under `web/`, the short-URL host that
-resolves Terraform module sources, and — since DEV-0163 — the Terraform that
-serves the domain, under `terraform/`. It is a **spoke** in the hub-and-spoke
+This repo is `noisypigeon/garden`. It holds the Zola site under `web/`, published at
+`https://noisypigeon.garden`, which is also the short-URL host that resolves
+Terraform module sources (LIB-0009). Since DEV-0163 it also holds the Terraform
+that serves the domain, under `terraform/`. Until DEV-0165 it was
+`noisypigeon/pigeon.dev`, serving `pigeon.dev`. That domain's zone now lives in
+`noisypigeon/noisypigeon.com` and 301s here. It is a **spoke** in the hub-and-spoke
 architecture of LIB-0001 — content plus the infrastructure that serves it,
 consuming every reusable asset from the hub by pinned version.
 
@@ -73,15 +76,17 @@ squash-merges the PR. Never merge a Terraform PR any other way.
 Do not add a module, a theme file, or a reusable script here — it belongs in the
 hub.
 
-What stayed, and why: `pigeon.dev/modules/<provider>/<module>/vX.Y.Z` is a
-public interface with a stability guarantee (ADR-0109/0110), and serving it is a
-property of the domain rather than of the code. The redirect pages, module
-overview pages and release posts that implement it are generated into
-`web/content` at build time by the hub's
-`.github/scripts/generate-module-redirects.sh`, reading the **hub's** tags and
-`CHANGELOG.md` files out of the fetched `.lib-src/`. The public URL path is
-`modules/…` and always was — decoupling it from internal layout is exactly what
-let the source move out from under it without breaking a pin.
+What stayed, and why: `noisypigeon.garden/terraform/<provider>/<module>/vX.Y.Z`
+is a public interface (LIB-0009, after ADR-0109/0110), and serving it is a
+property of the domain rather than of the code. The generated pages land in
+`web/content/terraform/` (redirect and overview pages),
+`web/content/theme-versions/` and `web/content/releases/`. The hub's
+`.github/scripts/generate-module-redirects.sh` writes them at build time,
+reading the **hub's** tags and `CHANGELOG.md` files out of the fetched
+`.lib-src/`. Only each directory's `_index.md` is tracked.
+**A failed deploy here breaks every consumer's `terraform init`.**
+`pigeon.dev/modules/…`, the interface's old address, was retired with no
+redirect (LIB-0009 §2).
 
 The history is worth knowing when reading older records: ADR-0154 hoisted
 `templates/` here from `noisypigeon/noisypigeon` keeping the `templates/…` paths
@@ -91,8 +96,8 @@ which let the generator read `templates/` off local disk and let
 `resolve-theme.sh` use a live `"main"` symlink. DEV-0162 undid both of those
 localisations: everything is fetched again now, but pinned to a version rather
 than tracking a branch, and renamed the site root from `pigeon.dev/src` to
-`web/` -- a repo named `pigeon.dev` does not need a directory named
-`pigeon.dev` inside it.
+`web/`. DEV-0165 then renamed the repo, moved the site to `noisypigeon.garden`
+and handed `pigeon.dev`'s zone to `noisypigeon.com`.
 
 See `README.md` for the consumption contract.
 
@@ -103,12 +108,12 @@ here from `noisypigeon/noisypigeon/docs/adr/` by ADR-0157, renamed from
 `adr/infrastructure/` with `DEV-` IDs by DEV-0160, and flattened out of
 `adr/pigeon.dev/` by DEV-0161 once each repo started carrying its own corpus.
 The siblings now live in their own repos: `COM-` records in `noisypigeon.com` (`NPC-` in older prose is an alias, COM-0001),
-`LIB-` records in `pigeon-lib`, `RUN-` records in `willowgraysen.com`. Before making an architectural or interface change here, read the
+`LIB-` records in `pigeon-lib`, `RUN-` records in `noisypigeon/willowgraysen`. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
 contradict one, flag it rather than silently diverging, and prefer writing a new
 ADR over undocumented drift.
 
-Filing a `pigeon.dev` ADR, by hand — `adr-new.sh` lives in
+Filing a `DEV-` ADR, by hand — `adr-new.sh` lives in
 `noisypigeon/noisypigeon` and still hardcodes the old path, so it cannot create
 these (DEV-0160):
 
@@ -133,7 +138,8 @@ tags resolving against `noisypigeon/noisypigeon`, was retired by DEV-0160 step 0
 once nothing pinned them — every module tag now lives here, under one prefix),
 ADR-0037/0093/0110 (this directory's prior homes and why old tags still
 resolve), ADR-0109/0136 (the short-URL redirect
-mechanism and its move to the `pigeon.dev` host), ADR-0119/0120/0153 (the
+mechanism and its move to the `pigeon.dev` host; LIB-0009 moved it again, to
+`noisypigeon.garden/terraform/`), DEV-0165 (this repo's rename and move), ADR-0119/0120/0153 (the
 modules' current composition shape), ADR-0112/0113/0114/0139 (the theme, its
 versioning, and its resolution), and ADR-0156 (hoisting `pigeon.dev/src` here
 and cutting its deploy over from a Scaleway bucket to GitHub Pages).
@@ -184,7 +190,7 @@ spoke cannot fetch its own fetcher.
 
 A change spanning a module and its consumer is two PRs in two repos: the
 `pigeon-lib` one merges, tags and dispatches the deploy first, then the
-consumer's `source =` pin is bumped in `noisypigeon/noisypigeon`. For local
+consumer's `source =` pin is bumped in each spoke that uses it. For local
 iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
 `fetch-lib.sh` leaves it alone.
 

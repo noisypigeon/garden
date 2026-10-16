@@ -1,39 +1,45 @@
-# pigeon.dev
+# garden
 
-The Zola site published at `pigeon.dev`, and the short-URL host that resolves
-Terraform module sources to the repo holding them.
+The Zola site published at [`noisypigeon.garden`](https://noisypigeon.garden),
+and the short-URL host that resolves Terraform module sources to the repo
+holding them. Until DEV-0165 this repo was `noisypigeon/pigeon.dev` and the
+site was `pigeon.dev`. That domain now redirects here, and its old
+`pigeon.dev/modules/...` short URLs no longer resolve
+([LIB-0009](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md)).
 
-**The templates themselves are no longer here.** DEV-0162 moved
-`templates/terraform/` and `templates/zola-site/` to
+**The templates themselves aren't here.** DEV-0162 moved them to
 [`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib), where
-they live as `terraform/` and `zola-site/` and are tagged and released. This
-repo kept the one thing that must stay: `pigeon.dev/modules/...` is a public
-interface with a stability guarantee, and serving it is a property of the
-domain, not of the code.
+they live as `terraform/` and `zola-site/` and are tagged and released. What
+this repo keeps is the thing a domain has to serve: the public
+`noisypigeon.garden/terraform/...` interface.
 
-So this repo is content, its own deploy, and — since DEV-0163 — the Terraform
-that serves the domain: DNS for the site and the wiki, the Fastmail records, and
-its own Terraform state bucket on Cloudflare R2 with a Backblaze B2 backup
-(DEV-0164), under [`terraform/`](terraform). It holds no templates and no
-scripts beyond [`fetch-lib.sh`](fetch-lib.sh); its [`root.hcl`](root.hcl) is
-generated from `pigeon-lib`'s template at the version [`spoke.hcl`](spoke.hcl)
-pins, and committed.
+So this repo is content, its own deploy, and the Terraform that serves the
+domain (DEV-0163) under [`terraform/`](terraform):
+
+- the `noisypigeon.garden` DNS for GitHub Pages;
+- its own Terraform state bucket on Cloudflare R2, with a Backblaze B2 backup
+  (DEV-0164).
+
+`pigeon.dev`'s DNS, including its Fastmail records and the redirect, lives in
+[`noisypigeon/noisypigeon.com`](https://github.com/noisypigeon/noisypigeon.com).
+This repo holds no templates and no scripts beyond [`fetch-lib.sh`](fetch-lib.sh).
+Its [`root.hcl`](root.hcl) is generated from `pigeon-lib`'s template at the
+version [`spoke.hcl`](spoke.hcl) pins, and committed.
 
 ## Consuming
 
-A Terraform module is consumed by its short URL, unchanged by the move, which
-resolves through Terraform/go-getter's HTTP module-source discovery protocol:
+A Terraform module is consumed by its short URL, which resolves through
+Terraform/go-getter's HTTP module-source discovery protocol:
 
 ```hcl
 module "state_bucket" {
-  source = "https://pigeon.dev/modules/scaleway/object-bucket/v4.2.0"
+  source = "https://noisypigeon.garden/terraform/cloudflare/bucket/v1.0.0"
 }
 ```
 
-The public namespace is `modules/...` — deliberately decoupled from wherever
-the source actually lives, which is exactly what let the source move out from
-under it without breaking a single pin. See
-[`pigeon-lib`'s `terraform/README.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/terraform/README.md)
+The URL is a public interface of its own. It's deliberately decoupled from
+wherever the source actually lives, so moving the source doesn't break a pin.
+See [`pigeon-lib`'s `terraform/README.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/terraform/README.md)
 for the full contract, including the equivalent hand-written `git::` form and
 how to iterate locally against an unreleased change.
 
@@ -43,36 +49,39 @@ through [`fetch-lib.sh`](fetch-lib.sh) and [`.lib-version`](.lib-version).
 
 ## Releasing
 
-**This repo cuts no releases.** Since DEV-0162 it holds content and its own
-deploy, and every versioned, reusable asset — the Terraform modules, the Zola
-theme, the shared CI — lives in
-[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib), which is
+**This repo cuts no releases.** Every versioned, reusable asset, meaning the
+Terraform modules, the Zola theme and the shared CI, lives in
+[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib). That's
 where a release PR and its `release:*` label belong. [`.lib-version`](.lib-version)
 pins the version this repo consumes, and [`fetch-lib.sh`](fetch-lib.sh)
-materializes it.
+materializes it. A hub release dispatches
+[`garden-pages.yml`](.github/workflows/garden-pages.yml) here, which rebuilds
+the module pages from the hub's tags.
 
 Every merged PR still gets exactly one line in the root
-[`CHANGELOG.md`](CHANGELOG.md) — `root-changelog.yml` writes it, for every PR
-without exception, running `root-changelog.sh` out of the pinned library rather
-than a vendored copy. DEV-0160 is that contract; DEV-0162 is what left this
-workflow as the only writer of it.
+[`CHANGELOG.md`](CHANGELOG.md). `root-changelog.yml` writes it for every PR,
+running `root-changelog.sh` out of the pinned library. DEV-0160 is that
+contract.
 
 ## Decision records
 
-This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`, and are
-written there. Each repo now keeps its own corpus under its own prefix —
-`noisypigeon.com` holds `COM-` records (formerly `NPC-`), `pigeon-lib` holds `LIB-` ones,
-`willowgraysen.com` holds `RUN-` ones — so this
-directory is `DEV-` only, and flat.
+This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`. The prefix
+stayed `DEV-` through the rename (LIB-0009). Each repo keeps its own corpus:
 
-The split itself is
-[ADR-0154](adr/DEV-0154-hoist-templates-to-pigeon-dev-repo.md); the
-directly relevant history is ADR-0037 (the original `pigeon-tf` merge), ADR-0093
-and ADR-0110 (prior relocations), ADR-0109/0136 (the short-URL mechanism), and
-ADR-0112/0113/0114/0139 (the theme). The corpus itself moved here in
-[ADR-0157](adr/DEV-0157-hoist-adrs-to-pigeon-dev.md) and took its
-current name and `DEV-` prefix in
-[DEV-0160](adr/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md),
-which also set the root-changelog contract above, and was flattened to `adr/` by
-[DEV-0161](adr/DEV-0161-flatten-the-adr-corpus-and-re-prefix-to-dev.md). Bare
-`ADR-NNNN` in older prose and `DEV-NNNN` refer to the same records.
+- `noisypigeon/noisypigeon.com` holds `COM-` records (formerly `NPC-`);
+- `noisypigeon/pigeon-lib` holds `LIB-` records;
+- `noisypigeon/willowgraysen` holds `RUN-` records.
+
+Bare `ADR-NNNN` in older prose and `DEV-NNNN` refer to the same records.
+
+These records are directly relevant:
+
+- **[DEV-0165](adr/DEV-0165-pigeon-dev-becomes-noisypigeon-garden.md):** this
+  repo's move to `noisypigeon.garden`.
+- **ADR-0109/0136:** the short-URL mechanism, which LIB-0009 moved to this host.
+- **ADR-0112/0113/0114/0139:** the theme.
+- **[ADR-0154](adr/DEV-0154-hoist-templates-to-pigeon-dev-repo.md),
+  [ADR-0157](adr/DEV-0157-hoist-adrs-to-pigeon-dev.md),
+  [DEV-0160](adr/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md)
+  and [DEV-0161](adr/DEV-0161-flatten-the-adr-corpus-and-re-prefix-to-dev.md):**
+  how this corpus got here.
