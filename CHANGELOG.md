@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [terraform] feat(terraform): turn the Scaleway provider off and drop its secrets (DEV-0164) ([#37](https://github.com/noisypigeon/pigeon.dev/pull/37))
 - [terraform] chore(terraform): destroy this domain's Scaleway project ([#36](https://github.com/noisypigeon/pigeon.dev/pull/36))
 - [terraform] chore(terraform): destroy the old Scaleway state bucket ([#35](https://github.com/noisypigeon/pigeon.dev/pull/35))
 - [terraform] chore(terraform): let the old Scaleway state bucket be destroyed with its contents ([#34](https://github.com/noisypigeon/pigeon.dev/pull/34))
