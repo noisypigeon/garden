@@ -64,7 +64,7 @@ contract.
 This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`. Each repo keeps
 its own corpus:
 
-- `noisypigeon/noisypigeon.com` holds `COM-` records (formerly `NPC-`);
+- `noisypigeon/blog` holds `COM-` records (formerly `NPC-`);
 - `noisypigeon/pigeon-lib` holds `LIB-` records;
 - `noisypigeon/willowgraysen` holds `RUN-` records.
 

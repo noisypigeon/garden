@@ -85,7 +85,7 @@ See `README.md` for the consumption contract.
 ## Where the decisions live
 
 ADRs live in this repo, flat under `adr/`, as `DEV-NNNN-<slug>.md`.
-The siblings live in their own repos: `COM-` records in `noisypigeon.com` (`NPC-` in older prose is an alias, COM-0001),
+The siblings live in their own repos: `COM-` records in `noisypigeon/blog` (`NPC-` in older prose is an alias, COM-0001),
 `LIB-` records in `pigeon-lib`, `RUN-` records in `noisypigeon/willowgraysen`. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
 contradict one, flag it rather than silently diverging, and prefer writing a new
