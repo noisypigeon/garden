@@ -10,12 +10,16 @@ consuming every reusable asset from the hub by pinned version.
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`,
 where `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. This
-repo was its first adopter. Five leaves:
+repo was its first adopter. A leaf calling a zone-scoped Cloudflare module adds the
+zone, `terraform/cloudflare/<zone>/<module>/<instance>/` (LIB-0008), and writes
+`zone_id = local.cloudflare_zone_id`, which `root.hcl` derives from the path and
+`ENV_CF_ZONE_ID_<ZONE>`. Six leaves:
 
 | Leaf | What it is |
 | --- | --- |
-| `cloudflare/dns-record/fastmail` | Fastmail's DKIM CNAMEs, MX and SPF |
-| `cloudflare/dns-record/github-pages` | apex and `www` CNAMEs to GitHub Pages |
+| `cloudflare/pigeon.dev/dns-record/fastmail` | Fastmail's DKIM CNAMEs, MX and SPF |
+| `cloudflare/pigeon.dev/dns-record/github-pages` | `pigeon.dev`'s apex and `www` CNAMEs to GitHub Pages |
+| `cloudflare/noisypigeon.garden/dns-record/github-pages` | `noisypigeon.garden`'s apex and `www` CNAMEs to GitHub Pages (DEV-0165) |
 | `cloudflare/bucket/terraform-state` | this domain's R2 Terraform state bucket (LIB-0007, DEV-0164) |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
@@ -24,11 +28,11 @@ A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several
 instances). A new leaf goes under that module's coordinate, with a kebab-case
 `<instance>` naming what it is for. They were hoisted from `noisypigeon/noisypigeon`
 with their history (DEV-0163) and renamed into this layout by moving their state
-(LIB-0004 §3). Each leaf's state key is `terraform/<provider>/<module>/<instance>/terraform.tfstate`
+(LIB-0004 §3), then under their zone (LIB-0008 §3). Each leaf's state key is its path plus `/terraform.tfstate`
 in this domain's own R2 bucket, because `root.hcl` sits at this repo's root (LIB-0001
 invariant 4). **Moving `root.hcl` or a leaf changes its state key** — don't,
-without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, then
-`state rm` everything at the old key.
+without LIB-0008 §3: copy the state object to the new key, check it against a
+worktree of `main`, plan `No changes.`, then `state rm` everything at the old key.
 
 - **`root.hcl` is generated — never edit it.** It is pigeon-lib's
   `terragrunt/root-hcl` template at the version `spoke.hcl` pins
