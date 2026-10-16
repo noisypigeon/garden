@@ -27,7 +27,7 @@ instances). A new leaf goes under that module's coordinate, with a kebab-case
 `<instance>` naming what it is for. They were hoisted from `noisypigeon/noisypigeon`
 with their history (DEV-0163) and renamed into this layout by moving their state
 (LIB-0004 §3). Each leaf's state key is `terraform/<provider>/<module>/<instance>/terraform.tfstate`
-in this domain's own bucket, because `root.hcl` sits at this repo's root (LIB-0001
+in this domain's own R2 bucket, because `root.hcl` sits at this repo's root (LIB-0001
 invariant 4). **Moving `root.hcl` or a leaf changes its state key** — don't,
 without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, then
 `state rm` everything at the old key.
@@ -40,11 +40,23 @@ without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, th
   the resolver with `--check` and fails on drift. To take a template change, bump
   `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
 - **`spoke.hcl`** holds this spoke's instance values: the template version,
-  `state_bucket_secret` (`PIGEON_DEV_TERRAFORM_STATE_BUCKET_NAME`) and the
-  `providers` map (LIB-0005) — `cloudflare` and `scaleway`, on for every leaf.
+  `state_bucket_secret` (`PIGEON_DEV_R2_TERRAFORM_STATE_BUCKET_NAME`),
+  `state_backend = "cloudflare"` (LIB-0007, DEV-0164) and the `providers` map
+  (LIB-0005) — `cloudflare` and `scaleway` on for every leaf, `backblaze` for
+  `terraform/backblaze/` only.
+- **State is on Cloudflare R2, backed up to Backblaze B2** (DEV-0164). R2 has no
+  object versioning, so `state-backup.yml` copies every state object to a
+  versioned B2 bucket after each apply and daily. Its B2 key can list and write,
+  never read or delete. A restore needs an admin B2 key, by hand, through B2's
+  native API: follow pigeon-lib's
+  [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
+  Here the backup bucket is `dev-65bctm-terraform-state-backup`, in B2's
+  `ca-east-006` region.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has
   the recipient). Edit with `mise run secrets-edit`. CI decrypts with the
-  `SOPS_AGE_KEY` repo secret.
+  `SOPS_AGE_KEY` repo secret. The R2 S3 keys (`CLOUDFLARE_R2_*`) are made by
+  hand in the Cloudflare dashboard — there is no Terraform resource for them —
+  scoped to the state bucket with *Object Read & Write*.
 - **`state/iam` is not here.** It mints the deploy key these leaves authenticate
   with, and must not depend on that key, so it stays in `noisypigeon/noisypigeon`
   on that repo's shared root and shared state bucket (LIB-0001 §8; DEV-0130/0133;
@@ -146,7 +158,7 @@ with no `paths:` filter and no stand-down case, since there is no longer a
 `<!-- entries below; newest first -->` marker is where entries get inserted —
 the script refuses to write without it.
 
-Four workflows, all thin callers reading their logic out of the pinned library:
+Five workflows, all thin callers reading their logic out of the pinned library:
 
 - `root-changelog.yml` — a thin caller of `pigeon-lib`'s reusable
   `spoke-root-changelog.yml`, passing this repo's tag precedence (`web/` →
@@ -155,7 +167,10 @@ Four workflows, all thin callers reading their logic out of the pinned library:
   fetches the library and runs its `root-changelog.sh`.
 - `terragrunt-plan.yml` / `terragrunt-apply.yml` — thin callers of
   `pigeon-lib`'s `terragrunt-detect.yml` and `terragrunt-run.yml`; see
-  "Terraform" above.
+  "Terraform" above. `terragrunt-apply.yml`'s `backup` job then calls
+  `state-backup.yml`, even after a failed apply.
+- `state-backup.yml` — a thin caller of `pigeon-lib`'s `state-backup.yml`, daily
+  and on `workflow_dispatch`: copies the R2 state to its B2 backup (DEV-0164).
 - `pigeon-dev-pages.yml` — a thin caller of `pigeon-lib`'s reusable
   `zola-site-pages.yml`, which resolves the theme and regenerates the redirect
   pages, overview pages and release posts from the **library's** tags and
