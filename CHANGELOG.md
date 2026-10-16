@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [terraform] chore(terraform): source modules from noisypigeon.garden (LIB-0009) ([#42](https://github.com/noisypigeon/garden/pull/42))
 - [pigeon.dev] feat(site): serve from noisypigeon.garden with module pages under /terraform/ (DEV-0165) ([#41](https://github.com/noisypigeon/garden/pull/41))
 - [terraform] refactor(terraform): zone leaves for pigeon.dev and noisypigeon.garden (DEV-0165) ([#40](https://github.com/noisypigeon/garden/pull/40))
 - [ci] ci: rename the Pages workflow to garden-pages.yml (DEV-0165) ([#39](https://github.com/noisypigeon/garden/pull/39))
