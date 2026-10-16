@@ -36,8 +36,9 @@ without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of `main`, th
   plans inside git worktrees, which only hold tracked files (LIB-0003). CI runs
   the resolver with `--check` and fails on drift. To take a template change, bump
   `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
-- **`spoke.hcl`** holds this spoke's instance values: the template version and
-  `state_bucket_secret` (`PIGEON_DEV_TERRAFORM_STATE_BUCKET_NAME`).
+- **`spoke.hcl`** holds this spoke's instance values: the template version,
+  `state_bucket_secret` (`PIGEON_DEV_TERRAFORM_STATE_BUCKET_NAME`) and the
+  `providers` map (LIB-0005) — `cloudflare` and `scaleway`, on for every leaf.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has
   the recipient). Edit with `mise run secrets-edit`. CI decrypts with the
   `SOPS_AGE_KEY` repo secret.
