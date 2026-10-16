@@ -83,4 +83,32 @@ stays where it is. `terraform/secrets.enc` gains
 
 ## Verification
 
-Recorded as each step lands.
+1. **§1.** `gh repo rename` kept the repository's ID, the `main` ruleset, both
+   Actions secrets and the Pages settings. #39 renamed the workflow, and a
+   manual `garden-pages.yml` dispatch deployed cleanly. The first module
+   release afterwards (pigeon-lib#53) dispatched it from the hub.
+2. **§2** (#40). Both moved state objects matched their old keys by SHA-256, and
+   in serial, lineage and resource count (8 instances). They planned
+   `No changes.`, and `state rm` emptied the old keys. The apply created the
+   `noisypigeon.garden` leaf's 2 CNAMEs, and both resolved to GitHub Pages.
+3. **§3** (#41).
+   - `mise run garden-build` produced 170 pages, with no path left under
+     `/modules/`.
+   - After the custom domain moved and its certificate was approved, the deploy
+     served `https://noisypigeon.garden`, with canonical URLs on that host.
+   - `/terraform/cloudflare/dns-record/v0.1.0` carried the `terraform-get` meta,
+     and `terraform init` resolved it.
+   - #42 then moved this repo's own sources to the new URLs, with `No changes.`
+     on 6/6 leaves.
+4. **§4.**
+   - `fastmail`'s state was copied to noisypigeon.com's R2 bucket. It matched in
+     hash, serial, lineage and count (6 instances), and planned `No changes.`
+     there (noisypigeon/noisypigeon.com#32). `state rm` then emptied this repo's
+     key.
+   - #43 destroyed only the 2 github-pages CNAMEs, and noisypigeon.com#32
+     created the placeholders and the ruleset.
+   - `pigeon.dev` and `www.pigeon.dev` then returned `301` to
+     `https://noisypigeon.garden/`. The Fastmail MX and DKIM records still
+     resolved.
+   - The four emptied state objects were deleted from this repo's R2 bucket.
+     Earlier versions of each remain in B2.
