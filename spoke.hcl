@@ -15,9 +15,10 @@ locals {
 
   # Which providers this spoke's leaves get (LIB-0005). A provider absent from
   # the map is off; `leaves` scopes one to path prefixes ending in "/".
+  # Scaleway has been off since DEV-0164 retired this domain's last Scaleway
+  # resources.
   providers = {
     cloudflare = {}
-    scaleway   = {}
     backblaze  = { leaves = ["terraform/backblaze/"] }
   }
 }

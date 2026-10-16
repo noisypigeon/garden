@@ -106,4 +106,27 @@ in B2.
 
 ## Verification
 
-To be filled in as each step lands.
+1. **The new leaves (#32).** The apply created five resources, each leaf
+   exactly once. That's on `workflows/v1.5.3`, pinned first in #31 for the
+   duplicate-run fix. Afterwards, the account listed one new R2 bucket,
+   `dev-2j1cmn-terraform-state`, and one new B2 bucket,
+   `dev-65bctm-terraform-state-backup`.
+2. **The copy.** All seven leaves' state objects were copied from Scaleway to
+   R2. For every leaf, a `terragrunt state pull` from R2 on the cutover branch
+   matched the pull from Scaleway on a worktree of `main` in serial, lineage
+   and resource count.
+3. **The cutover (#33).** `mise run plan` and CI, both against R2, showed
+   `No changes.` on 7/7 leaves. After merging, a manual `state-backup.yml` run
+   found 7 files in R2 and 7 in B2.
+4. **The bucket (#34, #35).** #34 applied one change, `force_destroy`. #35's
+   apply destroyed two resources, the bucket and its suffix. Afterwards, a
+   listing of fr-par Object Storage with the deploy key returned no buckets.
+5. **The project (#36).** The apply destroyed one resource. Afterwards, the
+   organization's only project was `willowgraysen`.
+6. **The deploy key (noisypigeon/noisypigeon#319).** The apply destroyed four
+   resources: the application, its policy, its key and the key's `time_static`.
+   Afterwards, the organization had no `pigeon-dev-terraform-deploy`
+   application.
+7. **Scaleway off.** With `scaleway` dropped from `providers` and the secrets
+   removed, `mise run plan` showed `No changes.` on 5/5 leaves, without
+   installing the Scaleway provider.
