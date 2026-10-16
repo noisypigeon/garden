@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [adr] docs: DEV-0165 verification, and CLAUDE.md and README for noisypigeon.garden ([#44](https://github.com/noisypigeon/garden/pull/44))
 - [terraform] refactor(terraform): hand pigeon.dev's zone to noisypigeon.com (DEV-0165) ([#43](https://github.com/noisypigeon/garden/pull/43))
 - [terraform] chore(terraform): source modules from noisypigeon.garden (LIB-0009) ([#42](https://github.com/noisypigeon/garden/pull/42))
 - [pigeon.dev] feat(site): serve from noisypigeon.garden with module pages under /terraform/ (DEV-0165) ([#41](https://github.com/noisypigeon/garden/pull/41))
