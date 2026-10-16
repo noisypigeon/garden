@@ -30,10 +30,9 @@ jobs:
     if: github.event.pull_request.merged == true
     uses: noisypigeon/pigeon-lib/.github/workflows/spoke-root-changelog.yml@workflows/v1.6.0
     with:
-      # First match wins. web/ is labelled pigeon.dev: the directory was
-      # renamed by DEV-0162, the site it publishes was not.
+      # First match wins. web/ is labelled garden, after the site it publishes.
       precedence: |
-        ^web/=pigeon.dev
+        ^web/=garden
         ^(terraform/|root\.hcl$|spoke\.hcl$|\.sops\.yaml$)=terraform
         ^adr/=adr
         ^\.github/=ci
