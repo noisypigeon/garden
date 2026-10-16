@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [terraform] feat(terraform): add the R2 state bucket and its B2 backup (DEV-0164) ([#32](https://github.com/noisypigeon/pigeon.dev/pull/32))
 - [ci] ci: pin pigeon-lib's reusable workflows at workflows/v1.5.3 ([#31](https://github.com/noisypigeon/pigeon.dev/pull/31))
 
 ## 2026-10-15
