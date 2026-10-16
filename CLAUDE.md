@@ -10,7 +10,7 @@ consuming every reusable asset from the hub by pinned version.
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`,
 where `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. This
-repo was its first adopter. Four leaves:
+repo was its first adopter. Seven leaves:
 
 | Leaf | What it is |
 | --- | --- |
@@ -18,6 +18,9 @@ repo was its first adopter. Four leaves:
 | `cloudflare/dns-record/github-pages` | apex and `www` CNAMEs to GitHub Pages |
 | `scaleway/project/dev` | this domain's Scaleway project |
 | `scaleway/object-bucket/terraform-state` | this domain's Terraform state bucket |
+| `cloudflare/bucket/terraform-state` | this domain's R2 Terraform state bucket (LIB-0007, DEV-0164) |
+| `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
+| `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
 
 A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several
 instances). A new leaf goes under that module's coordinate, with a kebab-case
