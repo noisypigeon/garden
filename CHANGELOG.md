@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [terraform] refactor(terraform): zone leaves for pigeon.dev and noisypigeon.garden (DEV-0165) ([#40](https://github.com/noisypigeon/garden/pull/40))
 - [ci] ci: rename the Pages workflow to garden-pages.yml (DEV-0165) ([#39](https://github.com/noisypigeon/garden/pull/39))
 - [adr] docs(adr): DEV-0165 pigeon.dev becomes noisypigeon.garden ([#38](https://github.com/noisypigeon/pigeon.dev/pull/38))
 - [terraform] feat(terraform): turn the Scaleway provider off and drop its secrets (DEV-0164) ([#37](https://github.com/noisypigeon/pigeon.dev/pull/37))
