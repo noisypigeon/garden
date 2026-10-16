@@ -1,5 +1,5 @@
 +++
-title = "pigeon.dev wiki"
+title = "noisypigeon.garden"
 template = "index.html"
 +++
 

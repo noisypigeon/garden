@@ -12,7 +12,7 @@ TG_TF_PATH = "terraform"
 # their own location rather than this repo's, so running the copies under
 # .lib-src/ from this site's src/ is correct -- that is the property DEV-0154
 # gave resolve-theme.sh and LIB-0002 gave the generator.
-[tasks.pigeon-dev-build]
+[tasks.garden-build]
 dir = "web"
 run = [
   "../fetch-lib.sh",
@@ -21,7 +21,7 @@ run = [
   "zola build",
 ]
 
-[tasks.pigeon-dev-serve]
+[tasks.garden-serve]
 dir = "web"
 run = [
   "../fetch-lib.sh",

@@ -1,6 +1,6 @@
-title = "pigeon.dev wiki"
+title = "noisypigeon.garden"
 description = "Notes and reference pages."
-base_url = "https://pigeon.dev"
+base_url = "https://noisypigeon.garden"
 theme = "zola-site"
 
 compile_sass = false
