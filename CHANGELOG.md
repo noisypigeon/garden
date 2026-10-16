@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-16
 
+- [repo] docs: name the renamed noisypigeon/blog repo ([#46](https://github.com/noisypigeon/garden/pull/46))
 - [terraform] docs: describe noisypigeon/garden as it is, without pigeon.dev ([#45](https://github.com/noisypigeon/garden/pull/45))
 - [adr] docs: DEV-0165 verification, and CLAUDE.md and README for noisypigeon.garden ([#44](https://github.com/noisypigeon/garden/pull/44))
 - [terraform] refactor(terraform): hand pigeon.dev's zone to noisypigeon.com (DEV-0165) ([#43](https://github.com/noisypigeon/garden/pull/43))
