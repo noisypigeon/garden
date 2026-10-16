@@ -191,7 +191,7 @@ iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
 
 ## Commands
 
-- `mise run pigeon-dev-build` / `mise run pigeon-dev-serve` — build / serve
+- `mise run garden-build` / `mise run garden-serve` — build / serve
   `web/` with Zola. Each fetches the pinned library, resolves the
   theme out of it, regenerates the redirect/overview/release pages, then runs
   `zola build`/`zola serve`.

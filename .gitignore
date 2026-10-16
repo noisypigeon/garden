@@ -7,8 +7,8 @@
 /.lib-src/
 .terragrunt-cache/
 /web/public
-/web/content/modules/*.md
-!/web/content/modules/_index.md
+/web/content/terraform/*.md
+!/web/content/terraform/_index.md
 /web/content/theme-versions/*.md
 !/web/content/theme-versions/_index.md
 /web/content/releases/*.md
