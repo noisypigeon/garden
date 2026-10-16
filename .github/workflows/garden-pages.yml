@@ -8,7 +8,7 @@
 # extra_step then run that clone's copies of resolve-theme.sh and the module
 # redirect generator, both of which resolve their own root from their own
 # location rather than this repo's.
-name: Deploy pigeon.dev
+name: Deploy garden
 
 on:
   push:
@@ -23,7 +23,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pigeon-dev-pages
+  group: garden-pages
   cancel-in-progress: false
 
 jobs:

@@ -166,7 +166,7 @@ Five workflows, all thin callers reading their logic out of the pinned library:
   `state-backup.yml`, even after a failed apply.
 - `state-backup.yml` — a thin caller of `pigeon-lib`'s `state-backup.yml`, daily
   and on `workflow_dispatch`: copies the R2 state to its B2 backup (DEV-0164).
-- `pigeon-dev-pages.yml` — a thin caller of `pigeon-lib`'s reusable
+- `garden-pages.yml` — a thin caller of `pigeon-lib`'s reusable
   `zola-site-pages.yml`, which resolves the theme and regenerates the redirect
   pages, overview pages and release posts from the **library's** tags and
   `CHANGELOG.md` files before `zola build`. `actions/deploy-pages` always
