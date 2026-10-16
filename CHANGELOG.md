@@ -37,6 +37,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-16
+
+- [ci] ci: pin pigeon-lib's reusable workflows at workflows/v1.5.3 ([#31](https://github.com/noisypigeon/pigeon.dev/pull/31))
+
 ## 2026-10-15
 
 - [terraform] chore(terraform): take root.hcl v2.0.0, with providers named in spoke.hcl ([#30](https://github.com/noisypigeon/pigeon.dev/pull/30))
