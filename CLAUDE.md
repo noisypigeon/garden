@@ -51,13 +51,15 @@ worktree of `main`, plan `No changes.`, then `state rm` everything at the old ke
   [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
   Here the backup bucket is `dev-65bctm-terraform-state-backup`, in B2's
   `ca-east-006` region.
-- **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has
-  the recipient). Edit with `mise run secrets-edit`. CI decrypts with the
-  `SOPS_AGE_KEY` repo secret. Every key has a fixed name from
-  `/secrets-schema.json` (LIB-0010): `TERRAFORM_STATE_*` for the R2 state,
-  `TERRAFORM_STATE_BACKUP_*` for its B2 copy, `CLOUDFLARE_PROVIDER_*` and
-  `BACKBLAZE_PROVIDER_*` for the providers. `check-secrets.sh` checks the names
-  in CI without decrypting. The R2 S3 keys (`TERRAFORM_STATE_ACCESS_KEY*`) are made by
+- **Secrets** are one sops/age dotenv file per concern under `terraform/secrets/`
+  (LIB-0012; `.sops.yaml` has the recipient): `terraform.enc` holds the R2 state's
+  `TERRAFORM_STATE_*` and, because `spoke.hcl` sets `state_backup = true`, its B2
+  copy's `TERRAFORM_STATE_BACKUP_*`; `cloudflare.enc` and `backblaze.enc` hold
+  `CLOUDFLARE_PROVIDER_*` and `BACKBLAZE_PROVIDER_*`. Each file holds exactly the
+  keys `/secrets-schema.json` gives it, and each leaf decrypts only the files it
+  uses. Edit one with `mise run secrets-edit <file>`, e.g. `secrets-edit cloudflare`.
+  CI decrypts with the `SOPS_AGE_KEY` repo secret, and `check-secrets.sh` checks
+  every file's key names without decrypting. The R2 S3 keys (`TERRAFORM_STATE_ACCESS_KEY*`) are made by
   hand in the Cloudflare dashboard — there is no Terraform resource for them —
   scoped to the state bucket with *Object Read & Write*.
 
@@ -180,4 +182,4 @@ iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
   then `terragrunt run --all`. Prefer the PR flow for `apply`.
 - `mise run terraform-prepare` — just the fetch and `root.hcl` regeneration.
 - `mise run fmt-terraform` / `mise run fmt-check-terraform`.
-- `mise run secrets-edit` — edit `terraform/secrets.enc` in place.
+- `mise run secrets-edit <file>` — edit `terraform/secrets/<file>.enc` in place.
