@@ -29,14 +29,14 @@ concurrency:
 
 jobs:
   detect:
-    uses: noisypigeon/library/.github/workflows/terragrunt-detect.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/terragrunt-detect.yml@workflows/v3.1.1
     with:
       leaf_pattern: '^terraform/|^root\.hcl$|^spoke\.hcl$|^\.sops\.yaml$'
 
   plan:
     needs: detect
     if: needs.detect.outputs.affects-leaves == 'true'
-    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v3.1.1
     with:
       command: plan
       prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check && .lib-src/.github/scripts/check-secrets.sh
