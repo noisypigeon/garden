@@ -26,7 +26,7 @@ jobs:
       github.event.issue.pull_request != null &&
       github.event.comment.body == 'terragrunt apply' &&
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
-    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v3.1.1
     with:
       command: apply
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
@@ -39,5 +39,5 @@ jobs:
   backup:
     needs: apply
     if: always() && needs.apply.result != 'skipped'
-    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v3.1.1
     secrets: inherit
