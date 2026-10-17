@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-17
 
+- [garden] Call noisypigeon/library, the renamed hub ([#51](https://github.com/noisypigeon/garden/pull/51))
 - [terraform] docs(terraform): output hints name terraform/secrets/terraform.enc ([#50](https://github.com/noisypigeon/garden/pull/50))
 - [terraform] chore(terraform): split secrets per concern and take root.hcl v4 (LIB-0012) ([#49](https://github.com/noisypigeon/garden/pull/49))
 - [terraform] docs(terraform): output hints name the LIB-0010 keys ([#48](https://github.com/noisypigeon/garden/pull/48))
