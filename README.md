@@ -3,10 +3,10 @@
 The Zola site published at [`noisypigeon.garden`](https://noisypigeon.garden),
 and the short-URL host that resolves Terraform module sources to the repo
 holding them
-([LIB-0009](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md)).
+([LIB-0009](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md)).
 
 **The modules and theme themselves aren't here.** They live in
-[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib) as
+[`noisypigeon/library`](https://github.com/noisypigeon/library) as
 `terraform/` and `zola-site/`, where they are tagged and released. What
 this repo keeps is the thing a domain has to serve: the public
 `noisypigeon.garden/terraform/...` interface.
@@ -19,7 +19,7 @@ domain under [`terraform/`](terraform):
   (DEV-0164).
 
 This repo holds no templates and no scripts beyond [`fetch-lib.sh`](fetch-lib.sh).
-Its [`root.hcl`](root.hcl) is generated from `pigeon-lib`'s template at the
+Its [`root.hcl`](root.hcl) is generated from `library`'s template at the
 version [`spoke.hcl`](spoke.hcl) pins, and committed.
 
 ## Consuming
@@ -35,19 +35,19 @@ module "state_bucket" {
 
 The URL is a public interface of its own. It's deliberately decoupled from
 wherever the source actually lives, so moving the source doesn't break a pin.
-See [`pigeon-lib`'s `terraform/README.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/terraform/README.md)
+See [`library`'s `terraform/README.md`](https://github.com/noisypigeon/library/blob/main/terraform/README.md)
 for the full contract, including the equivalent hand-written `git::` form and
 how to iterate locally against an unreleased change.
 
 The theme is consumed the same way: a Zola site pins a version and runs
-`zola-site/resolve-theme.sh` out of a `pigeon-lib` checkout. This site does it
+`zola-site/resolve-theme.sh` out of a `library` checkout. This site does it
 through [`fetch-lib.sh`](fetch-lib.sh) and [`.lib-version`](.lib-version).
 
 ## Releasing
 
 **This repo cuts no releases.** Every versioned, reusable asset, meaning the
 Terraform modules, the Zola theme and the shared CI, lives in
-[`noisypigeon/pigeon-lib`](https://github.com/noisypigeon/pigeon-lib). That's
+[`noisypigeon/library`](https://github.com/noisypigeon/library). That's
 where a release PR and its `release:*` label belong. [`.lib-version`](.lib-version)
 pins the version this repo consumes, and [`fetch-lib.sh`](fetch-lib.sh)
 materializes it. A hub release dispatches
@@ -65,14 +65,14 @@ This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`. Each repo keeps
 its own corpus:
 
 - `noisypigeon/blog` holds `COM-` records (formerly `NPC-`);
-- `noisypigeon/pigeon-lib` holds `LIB-` records;
+- `noisypigeon/library` holds `LIB-` records;
 - `noisypigeon/willowgraysen` holds `RUN-` records.
 
 Bare `ADR-NNNN` in older prose and `DEV-NNNN` refer to the same records.
 
 These records are directly relevant:
 
-- **[LIB-0009](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md):**
+- **[LIB-0009](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md):**
   the short-URL interface this site serves.
 - **[DEV-0165](adr/DEV-0165-pigeon-dev-becomes-noisypigeon-garden.md):** this
   repo's domain, zone and Pages setup.
