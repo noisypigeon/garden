@@ -12,9 +12,9 @@ consuming every reusable asset from the hub by pinned version.
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`,
 where `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. This
 repo was its first adopter. A leaf calling a zone-scoped Cloudflare module adds the
-zone, `terraform/cloudflare/<zone>/<module>/<instance>/` (LIB-0008), and writes
-`zone_id = local.cloudflare_zone_id`, which `root.hcl` derives from the path and
-`ENV_CF_ZONE_ID_<ZONE>`. Four leaves:
+zone, `terraform/cloudflare/<zone>/<module>/<instance>/` (LIB-0008), and passes
+`zone = local.cloudflare_zone`, which `root.hcl` derives from the path; the module
+looks the zone's ID up by apex (LIB-0011). Four leaves:
 
 | Leaf | What it is |
 | --- | --- |
@@ -39,7 +39,6 @@ worktree of `main`, plan `No changes.`, then `state rm` everything at the old ke
   the resolver with `--check` and fails on drift. To take a template change, bump
   `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
 - **`spoke.hcl`** holds this spoke's instance values: the template version,
-  `state_bucket_secret` (`PIGEON_DEV_R2_TERRAFORM_STATE_BUCKET_NAME`),
   `state_backend = "cloudflare"` (LIB-0007, DEV-0164) and the `providers` map
   (LIB-0005) — `cloudflare` on for every leaf, `backblaze` for
   `terraform/backblaze/` only. Scaleway is off: this domain has had no Scaleway
@@ -54,7 +53,11 @@ worktree of `main`, plan `No changes.`, then `state rm` everything at the old ke
   `ca-east-006` region.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has
   the recipient). Edit with `mise run secrets-edit`. CI decrypts with the
-  `SOPS_AGE_KEY` repo secret. The R2 S3 keys (`CLOUDFLARE_R2_*`) are made by
+  `SOPS_AGE_KEY` repo secret. Every key has a fixed name from
+  `/secrets-schema.json` (LIB-0010): `TERRAFORM_STATE_*` for the R2 state,
+  `TERRAFORM_STATE_BACKUP_*` for its B2 copy, `CLOUDFLARE_PROVIDER_*` and
+  `BACKBLAZE_PROVIDER_*` for the providers. `check-secrets.sh` checks the names
+  in CI without decrypting. The R2 S3 keys (`TERRAFORM_STATE_ACCESS_KEY*`) are made by
   hand in the Cloudflare dashboard — there is no Terraform resource for them —
   scoped to the state bucket with *Object Read & Write*.
 
