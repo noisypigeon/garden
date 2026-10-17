@@ -4,7 +4,7 @@ name: root-changelog
 #
 # A thin caller since noisypigeon/noisypigeon#306: the job body -- fetch the
 # library, pick the tag, run root-changelog.sh, push with retry -- lives in
-# pigeon-lib's spoke-root-changelog.yml, at the version /.lib-version pins. This
+# the library's spoke-root-changelog.yml, at the version /.lib-version pins. This
 # file keeps only what cannot live there: the trigger, the merged-only gate,
 # permissions, concurrency, and this repo's tag precedence.
 #
@@ -19,7 +19,7 @@ on:
 permissions:
   contents: write
 
-# Own group, as in pigeon-lib: GitHub keeps one pending run per group, so a
+# Own group, as in library: GitHub keeps one pending run per group, so a
 # shared group can silently drop a writer. The reusable retries a rejected push.
 concurrency:
   group: main-writer-rollup
@@ -28,7 +28,7 @@ concurrency:
 jobs:
   rollup:
     if: github.event.pull_request.merged == true
-    uses: noisypigeon/pigeon-lib/.github/workflows/spoke-root-changelog.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/spoke-root-changelog.yml@workflows/v3.0.0
     with:
       # First match wins. web/ is labelled garden, after the site it publishes.
       precedence: |

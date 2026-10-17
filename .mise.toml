@@ -30,7 +30,7 @@ run = [
   "zola serve",
 ]
 
-# Terraform (DEV-0163). root.hcl is generated from pigeon-lib's template at the
+# Terraform (DEV-0163). root.hcl is generated from the library's template at the
 # version spoke.hcl pins and committed; terraform-prepare regenerates it, so
 # after bumping root_hcl_version, run it and commit the diff. The leaves under
 # terraform/ keep the state keys they had in noisypigeon.

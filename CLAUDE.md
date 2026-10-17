@@ -10,7 +10,7 @@ consuming every reusable asset from the hub by pinned version.
 ## Terraform
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`,
-where `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. This
+where `<provider>/<module>` is exactly the library module the leaf calls. This
 repo was its first adopter. A leaf calling a zone-scoped Cloudflare module adds the
 zone, `terraform/cloudflare/<zone>/<module>/<instance>/` (LIB-0008), and passes
 `zone = local.cloudflare_zone`, which `root.hcl` derives from the path; the module
@@ -23,7 +23,7 @@ looks the zone's ID up by apex (LIB-0011). Four leaves:
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
 
-A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several
+A leaf calls exactly one library module (with `for_each` if it needs several
 instances). A new leaf goes under that module's coordinate, with a kebab-case
 `<instance>` naming what it is for. Each leaf's state key is its path plus `/terraform.tfstate`
 in this domain's own R2 bucket, because `root.hcl` sits at this repo's root (LIB-0001
@@ -31,7 +31,7 @@ invariant 4). **Moving `root.hcl` or a leaf changes its state key** — don't,
 without LIB-0008 §3: copy the state object to the new key, check it against a
 worktree of `main`, plan `No changes.`, then `state rm` everything at the old key.
 
-- **`root.hcl` is generated — never edit it.** It is pigeon-lib's
+- **`root.hcl` is generated — never edit it.** It is the library's
   `terragrunt/root-hcl` template at the version `spoke.hcl` pins
   (`root_hcl_version`), copied by `.lib-src/.github/scripts/resolve-root-hcl.sh`
   and committed. Committed rather than ignored because Terragrunt's git filter
@@ -47,8 +47,8 @@ worktree of `main`, plan `No changes.`, then `state rm` everything at the old ke
   object versioning, so `state-backup.yml` copies every state object to a
   versioned B2 bucket after each apply and daily. Its B2 key can list and write,
   never read or delete. A restore needs an admin B2 key, by hand, through B2's
-  native API: follow pigeon-lib's
-  [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
+  native API: follow the library's
+  [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/library/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
   Here the backup bucket is `dev-65bctm-terraform-state-backup`, in B2's
   `ca-east-006` region.
 - **Secrets** are one sops/age dotenv file per concern under `terraform/secrets/`
@@ -68,7 +68,7 @@ A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting
 apply sets the `terragrunt/apply` status this repo's ruleset requires and
 squash-merges the PR. Never merge a Terraform PR any other way.
 
-The Terraform modules and the Zola theme live in `noisypigeon/pigeon-lib` as
+The Terraform modules and the Zola theme live in `noisypigeon/library` as
 `terraform/` and `zola-site/`, are tagged
 `terraform/<provider>/<module>/vX.Y.Z` and `zola-site/vX.Y.Z`, and own their
 `CHANGELOG.md` files. The shared CI went with them, tagged `workflows/vX.Y.Z`.
@@ -91,7 +91,7 @@ See `README.md` for the consumption contract.
 
 ADRs live in this repo, flat under `adr/`, as `DEV-NNNN-<slug>.md`.
 The siblings live in their own repos: `COM-` records in `noisypigeon/blog` (`NPC-` in older prose is an alias, COM-0001),
-`LIB-` records in `pigeon-lib`, `RUN-` records in `noisypigeon/willowgraysen`. Before making an architectural or interface change here, read the
+`LIB-` records in `library`, `RUN-` records in `noisypigeon/willowgraysen`. Before making an architectural or interface change here, read the
 relevant ADRs and keep new work consistent with them; if a change would
 contradict one, flag it rather than silently diverging, and prefer writing a new
 ADR over undocumented drift.
@@ -129,7 +129,7 @@ ruleset (DEV-0163, copied from `noisypigeon`'s ADR-0129): no force-push, and the
 it to success straight away for a PR touching no Terraform. **This repo cuts no
 releases and carries no `release:*` label** —
 it is a spoke, holding content and its own deploy, and every
-versioned asset lives in `noisypigeon/pigeon-lib`. A release PR belongs there.
+versioned asset lives in `noisypigeon/library`. A release PR belongs there.
 
 Every merged PR gets exactly one line in the root `CHANGELOG.md`, under a
 `## YYYY-MM-DD` section, newest first. That is DEV-0160's contract, and
@@ -141,18 +141,18 @@ the script refuses to write without it.
 
 Five workflows, all thin callers reading their logic out of the pinned library:
 
-- `root-changelog.yml` — a thin caller of `pigeon-lib`'s reusable
+- `root-changelog.yml` — a thin caller of `library`'s reusable
   `spoke-root-changelog.yml`, passing this repo's tag precedence (`web/` →
   `garden`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
   `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). The reusable
   fetches the library and runs its `root-changelog.sh`.
 - `terragrunt-plan.yml` / `terragrunt-apply.yml` — thin callers of
-  `pigeon-lib`'s `terragrunt-detect.yml` and `terragrunt-run.yml`; see
+  `library`'s `terragrunt-detect.yml` and `terragrunt-run.yml`; see
   "Terraform" above. `terragrunt-apply.yml`'s `backup` job then calls
   `state-backup.yml`, even after a failed apply.
-- `state-backup.yml` — a thin caller of `pigeon-lib`'s `state-backup.yml`, daily
+- `state-backup.yml` — a thin caller of `library`'s `state-backup.yml`, daily
   and on `workflow_dispatch`: copies the R2 state to its B2 backup (DEV-0164).
-- `garden-pages.yml` — a thin caller of `pigeon-lib`'s reusable
+- `garden-pages.yml` — a thin caller of `library`'s reusable
   `zola-site-pages.yml`, which resolves the theme and regenerates the redirect
   pages, overview pages and release posts from the **library's** tags and
   `CHANGELOG.md` files before `zola build`. `actions/deploy-pages` always
@@ -166,9 +166,9 @@ takes a library change — never by tracking a branch (LIB-0001 invariant 2).
 spoke cannot fetch its own fetcher.
 
 A change spanning a module and its consumer is two PRs in two repos: the
-`pigeon-lib` one merges, tags and dispatches the deploy first, then the
+`library` one merges, tags and dispatches the deploy first, then the
 consumer's `source =` pin is bumped in each spoke that uses it. For local
-iteration before tagging, point `LIB_SRC` at a sibling `pigeon-lib` clone and
+iteration before tagging, point `LIB_SRC` at a sibling `library` clone and
 `fetch-lib.sh` leaves it alone.
 
 ## Commands
