@@ -37,6 +37,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-17
+
+- [terraform] chore(terraform): take root.hcl v3 with normalized secrets and dns-record v1 (LIB-0010, LIB-0011) ([#47](https://github.com/noisypigeon/garden/pull/47))
+
 ## 2026-10-16
 
 - [repo] docs: name the renamed noisypigeon/blog repo ([#46](https://github.com/noisypigeon/garden/pull/46))
