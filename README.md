@@ -61,21 +61,19 @@ contract.
 
 ## Decision records
 
-This repo's ADRs live in [`adr/`](adr), as `DEV-NNNN-<slug>.md`. Each repo keeps
-its own corpus:
-
-- `noisypigeon/blog` holds `COM-` records (formerly `NPC-`);
-- `noisypigeon/library` holds `LIB-` records;
-- `noisypigeon/willowgraysen` holds `RUN-` records.
-
-Bare `ADR-NNNN` in older prose and `DEV-NNNN` refer to the same records.
+This repo has no ADRs of its own. Its decisions live in
+[`noisypigeon/library`](https://github.com/noisypigeon/library/blob/main/docs/adr/), which sets the standards this spoke follows
+([LIB-0017](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0017-spokes-do-not-get-their-own-adrs.md)). The `DEV-`
+records that used to be here are archived verbatim in library's
+[`docs/adr/archive/`](https://github.com/noisypigeon/library/blob/main/docs/adr/archive). Bare `ADR-NNNN` in older prose and
+`DEV-NNNN` refer to the same records.
 
 These records are directly relevant:
 
 - **[LIB-0009](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0009-terraform-short-urls-move-to-noisypigeon-garden.md):**
-  the short-URL interface this site serves.
-- **[DEV-0165](adr/DEV-0165-pigeon-dev-becomes-noisypigeon-garden.md):** this
-  repo's domain, zone and Pages setup.
-- **ADR-0112/0113/0114/0139:** the theme.
-- **[DEV-0160](adr/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md):**
+  the short-URL interface this site serves. Its amendments include
+  [DEV-0165](https://github.com/noisypigeon/library/blob/main/docs/adr/archive/DEV-0165-pigeon-dev-becomes-noisypigeon-garden.md),
+  this repo's domain, zone and Pages setup.
+- **DEV-0112/0113/0114/0139:** the theme.
+- **[DEV-0160](https://github.com/noisypigeon/library/blob/main/docs/adr/archive/DEV-0160-rename-adr-domain-to-pigeon-dev-and-root-changelog-contract.md):**
   the root-changelog contract.
