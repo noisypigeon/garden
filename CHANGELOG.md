@@ -37,6 +37,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-18
+
+- [adr] Move decisions to library and remove adr/ (LIB-0017) ([#56](https://github.com/noisypigeon/garden/pull/56))
+
 ## 2026-10-17
 
 - [terraform] State backup goes to the garden-named B2 bucket (LIB-0016) ([#55](https://github.com/noisypigeon/garden/pull/55))
