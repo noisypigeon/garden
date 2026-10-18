@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-17
 
+- [terraform] State bucket takes the garden prefix (LIB-0016) ([#53](https://github.com/noisypigeon/garden/pull/53))
 - [ci] Take library workflows/v3.1.1 ([#52](https://github.com/noisypigeon/garden/pull/52))
 - [garden] Call noisypigeon/library, the renamed hub ([#51](https://github.com/noisypigeon/garden/pull/51))
 - [terraform] docs(terraform): output hints name terraform/secrets/terraform.enc ([#50](https://github.com/noisypigeon/garden/pull/50))
