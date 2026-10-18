@@ -1,4 +1,4 @@
 locals {
-  name_prefix = "dev"
+  name_prefix = "garden"
   name_suffix = "terraform-state"
 }
