@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-17
 
+- [terraform] State lives in the garden-prefixed bucket, and its B2 backup is named after it (LIB-0016) ([#54](https://github.com/noisypigeon/garden/pull/54))
 - [terraform] State bucket takes the garden prefix (LIB-0016) ([#53](https://github.com/noisypigeon/garden/pull/53))
 - [ci] Take library workflows/v3.1.1 ([#52](https://github.com/noisypigeon/garden/pull/52))
 - [garden] Call noisypigeon/library, the renamed hub ([#51](https://github.com/noisypigeon/garden/pull/51))
