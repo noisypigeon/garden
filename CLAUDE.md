@@ -89,37 +89,33 @@ See `README.md` for the consumption contract.
 
 ## Where the decisions live
 
-ADRs live in this repo, flat under `adr/`, as `DEV-NNNN-<slug>.md`.
-The siblings live in their own repos: `COM-` records in `noisypigeon/blog` (`NPC-` in older prose is an alias, COM-0001),
-`LIB-` records in `library`, `RUN-` records in `noisypigeon/willowgraysen`. Before making an architectural or interface change here, read the
-relevant ADRs and keep new work consistent with them; if a change would
-contradict one, flag it rather than silently diverging, and prefer writing a new
-ADR over undocumented drift.
+This repo holds no ADRs. It is a spoke, and its design standards come from
+`noisypigeon/library`, so its decisions live there too (LIB-0017):
 
-Filing a `DEV-` ADR, by hand — `adr-new.sh` lives in
-`noisypigeon/noisypigeon` and still hardcodes the old path, so it cannot create
-these (DEV-0160):
+- **A new decision about this repo** is an amendment on the `LIB-` record whose
+  standard it applies, or a new `LIB-` record. File it in library, and land it
+  before the change here that depends on it.
+- **The `DEV-` records that used to live here** are archived verbatim in
+  library's `docs/adr/archive/`. That domain is closed: no new `DEV-` number is
+  issued. DEV-0162 to DEV-0165 are also folded into LIB-0002, LIB-0003,
+  LIB-0007 and LIB-0009 as amendments.
+- **Citations are never rewritten.** `DEV-NNNN` and bare `ADR-NNNN` in existing
+  prose, comments and changelogs are the same record, and can be found in the
+  archive by number. `0136`, `0138` and `0156` are each used twice there.
 
-- **Number**: max+1 **within `adr/`**, which is the only sequence it shares. `0136`, `0138` and `0156` are each used twice already, from parallel
-  branches — check before claiming a number.
-- **Filename and H1 agree**: `DEV-0160-<slug>.md` holds `# DEV-0160: <title>`.
-- **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
-  Records dated before 2026-10-03 say `Willow Finch` and are correct as filed;
-  do not retrofit them.
-- **Sections**: `## Context` / `## Decision` / `## Consequences` /
-  `## Out of scope`, optionally then `## Verification`. No YAML frontmatter, and
-  no index or registry to update — there isn't one.
-- **Citations**: cite `DEV-NNNN`. Bare `ADR-NNNN` in existing prose means the
-  same record — DEV-0160 renamed the files and H1s but grandfathered the ~1,100
-  in-text citations, so the two spellings are aliases for this corpus.
-- Genuinely-deferred `## Out of scope` items get a GitHub issue filed against
-  `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
+Before an architectural or interface change here, read the relevant records
+and keep new work consistent with them. If a change would contradict one, flag
+it rather than silently diverging.
 
-The load-bearing ones for this repo: LIB-0009 (the
-`noisypigeon.garden/terraform/` short-URL interface this site serves), DEV-0165
-(this repo's domain, zone and Pages setup), ADR-0156 (the GitHub Pages deploy),
-ADR-0112/0113/0114/0139 (the theme, its versioning, and its resolution), and
-DEV-0163/DEV-0164 (this repo's Terraform and its R2 state).
+The load-bearing ones for this repo:
+
+- LIB-0009, the `noisypigeon.garden/terraform/` short-URL interface this site
+  serves;
+- DEV-0165, folded into LIB-0009, for this repo's domain, zone and Pages setup;
+- DEV-0156, the GitHub Pages deploy;
+- DEV-0112/0113/0114/0139, the theme, its versioning and its resolution;
+- DEV-0163 and DEV-0164, folded into LIB-0003 and LIB-0007, for this repo's
+  Terraform and its R2 state.
 
 ## Dev cycle
 
