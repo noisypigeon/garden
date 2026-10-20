@@ -1,16 +1,5 @@
 name: root-changelog
 
-# Every merged PR gets exactly one line in the root CHANGELOG.md (DEV-0160).
-#
-# A thin caller since noisypigeon/noisypigeon#306: the job body -- fetch the
-# library, pick the tag, run root-changelog.sh, push with retry -- lives in
-# the library's spoke-root-changelog.yml, at the version /.lib-version pins. This
-# file keeps only what cannot live there: the trigger, the merged-only gate,
-# permissions, concurrency, and this repo's tag precedence.
-#
-# Deliberately no `paths:` filter: the whole point is that no merged PR is
-# exempt.
-
 on:
   pull_request:
     types: [closed]
@@ -19,8 +8,7 @@ on:
 permissions:
   contents: write
 
-# Own group, as in library: GitHub keeps one pending run per group, so a
-# shared group can silently drop a writer. The reusable retries a rejected push.
+# Its own group: a shared one can silently drop a pending writer.
 concurrency:
   group: main-writer-rollup
   cancel-in-progress: false
@@ -30,10 +18,9 @@ jobs:
     if: github.event.pull_request.merged == true
     uses: noisypigeon/library/.github/workflows/spoke-root-changelog.yml@workflows/v3.1.1
     with:
-      # First match wins. web/ is labelled garden, after the site it publishes.
+      # First match wins.
       precedence: |
         ^web/=garden
         ^(terraform/|root\.hcl$|spoke\.hcl$|\.sops\.yaml$)=terraform
-        ^adr/=adr
         ^\.github/=ci
     secrets: inherit
