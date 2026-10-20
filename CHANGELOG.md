@@ -37,6 +37,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-20
+
+- [garden] docs: trim garden's prose to LIB-0021 ([#57](https://github.com/noisypigeon/garden/pull/57))
+
 ## 2026-10-18
 
 - [adr] Move decisions to library and remove adr/ (LIB-0017) ([#56](https://github.com/noisypigeon/garden/pull/56))
