@@ -36,8 +36,10 @@ and decision records all live there. Don't add them here.
   `spoke.hcl`, run `mise run terraform-prepare` and commit the diff.
 - Secrets are sops files under `terraform/secrets/`. Edit one with
   `mise run secrets-edit <file>`.
-- A Terraform PR is planned on the PR. Comment `terragrunt apply` to apply and
-  merge it. Never merge one any other way.
+- A Terraform PR is planned on the PR. Comment `terragrunt apply` to apply
+  exactly that plan and merge it. Never merge one any other way. If apply says
+  the plan is missing or stale, comment `terragrunt plan` to plan again, after
+  rebasing if `main` changed the same leaves (LIB-0022).
 - State is on R2, copied to B2 after every apply. To restore it, see library's
   `docs/runbooks/restore-terraform-state-from-b2.md`.
 
