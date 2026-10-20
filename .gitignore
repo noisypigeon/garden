@@ -3,7 +3,6 @@
 .terraform.lock.hcl
 .terraform/
 *.tfstate*
-# Materialized by fetch-lib.sh
 /.lib-src/
 .terragrunt-cache/
 /web/public
