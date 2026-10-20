@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-20
 
+- [garden] feat: point visitors to the blog with a site banner ([#59](https://github.com/noisypigeon/garden/pull/59))
 - [terraform] feat: adopt LIB-0022 saved-plan applies and state locking ([#58](https://github.com/noisypigeon/garden/pull/58))
 - [garden] docs: trim garden's prose to LIB-0021 ([#57](https://github.com/noisypigeon/garden/pull/57))
 
