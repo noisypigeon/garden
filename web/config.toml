@@ -8,7 +8,13 @@ generate_feeds = false
 build_search_index = false
 
 [extra]
-theme_version = "1.2.0"
+theme_version = "1.3.0"
 avatar = "/assets/images/site/avatar.png"
 social_preview = "/assets/images/site/social_preview.png"
 nav = []
+
+[extra.banner]
+enabled = true
+message = "This site is mainly a reference for me and my agents. You're probably looking for my blog:"
+link = "https://noisypigeon.com"
+link_text = "noisypigeon.com"
