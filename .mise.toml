@@ -2,6 +2,7 @@
 zola = "0.23.6"
 terraform = "1.16.3"
 terragrunt = "1.1.6"
+terraform-docs = "0.24.0"
 sops = "3.13.3"
 
 [env]
@@ -13,7 +14,7 @@ dir = "web"
 run = [
   "../fetch-lib.sh",
   "../.lib-src/zola-site/resolve-theme.sh",
-  "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
+  "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content --static-root static",
   "zola build",
 ]
 
@@ -22,7 +23,7 @@ dir = "web"
 run = [
   "../fetch-lib.sh",
   "../.lib-src/zola-site/resolve-theme.sh",
-  "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content",
+  "../.lib-src/.github/scripts/generate-module-redirects.sh --content-root content --static-root static",
   "zola serve",
 ]
 

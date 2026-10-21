@@ -13,3 +13,5 @@
 /web/content/releases/*.md
 !/web/content/releases/_index.md
 /web/themes/zola-site
+/web/static/terraform/
+/web/static/schemas/workload/
