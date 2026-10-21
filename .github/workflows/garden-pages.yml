@@ -19,10 +19,11 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/library/.github/workflows/zola-site-pages.yml@workflows/v4.0.1
+    uses: noisypigeon/library/.github/workflows/zola-site-pages.yml@workflows/v4.1.0
     with:
       src_dir: web
       build_cmd: "zola build"
       fetch_script: fetch-lib.sh
       theme_script: .lib-src/zola-site/resolve-theme.sh
-      extra_step: ".lib-src/.github/scripts/generate-module-redirects.sh --content-root web/content"
+      terraform_docs: true
+      extra_step: ".lib-src/.github/scripts/generate-module-redirects.sh --content-root web/content --static-root web/static"
