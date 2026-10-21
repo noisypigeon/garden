@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-20
 
+- [ci] Take workflows v4.3.0 ([#61](https://github.com/noisypigeon/garden/pull/61))
 - [ci] Publish LIB-0023 workload schemas ([#60](https://github.com/noisypigeon/garden/pull/60))
 - [garden] feat: point visitors to the blog with a site banner ([#59](https://github.com/noisypigeon/garden/pull/59))
 - [terraform] feat: adopt LIB-0022 saved-plan applies and state locking ([#58](https://github.com/noisypigeon/garden/pull/58))
