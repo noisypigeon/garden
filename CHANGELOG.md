@@ -39,6 +39,7 @@ with the module, so no per-module history was lost.
 
 ## 2026-10-22
 
+- [ci] Take workflows v4.10.1 ([#69](https://github.com/noisypigeon/garden/pull/69))
 - [ci] Take workflows v4.10.0 ([#68](https://github.com/noisypigeon/garden/pull/68))
 - [ci] Take workflows v4.9.1 ([#67](https://github.com/noisypigeon/garden/pull/67))
 - [ci] Take workflows v4.8.0 ([#66](https://github.com/noisypigeon/garden/pull/66))
