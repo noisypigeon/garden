@@ -37,6 +37,10 @@ with the module, so no per-module history was lost.
 
 <!-- entries below; newest first -->
 
+## 2026-10-23
+
+- [ci] Take workflows v4.12.0 ([#70](https://github.com/noisypigeon/garden/pull/70))
+
 ## 2026-10-22
 
 - [ci] Take workflows v4.10.1 ([#69](https://github.com/noisypigeon/garden/pull/69))
